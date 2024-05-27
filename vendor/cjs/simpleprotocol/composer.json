@@ -1,0 +1,29 @@
+{
+    "name": "cjs/simpleprotocol",
+    "description": "简单协议，统一协议",
+    "keywords": [],
+    "license": "MIT",
+    "homepage": "http://www.nfangbian.com",
+    "authors": [
+        {
+            "name": "jelly",
+            "email": "42282367@qq.com"
+        }
+    ],
+    "require": {
+        "php": ">=5.4.0"
+    },
+    "require-dev": {},
+    "autoload": {
+        "psr-4": {
+            "CjsProtocol\\": "src/"
+        },
+        "files": [
+            "src/Helper.php"
+        ]
+    },
+    "autoload-dev": {
+        "psr-4": {}
+    },
+    "suggest": {}
+}

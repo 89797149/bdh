@@ -1,0 +1,410 @@
+<!doctype html>
+<html>
+    <head>
+        <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+         <title>买家中心</title>
+         <link rel="stylesheet" href="__ROOT__/Apps/Home/View/default/css/common.css" />
+         <link rel="stylesheet" href="__ROOT__/Apps/Home/View/default/css/user.css">
+         <style>
+         	.wst-odetal-box{padding:10px;text-align:center;background-color:#ffffff;}
+         	.wst-tab{border-collapse: collapse; }
+         	.wst-tab-cpt{text-align:left;height:30px;font-weight:bold;}
+         	.wst-tab tr{height:30px;}
+         	.wst-tab tr td{border:1px solid #eeeeee;}
+         	.wst-td-title{width:100px;text-align:right;}
+         	.wst-td-content{padding-left:6px;text-align:left;}
+         	.wst-align-center{text-align:center;}
+         </style>
+	     <script src="__ROOT__/Public/js/jquery.min.js"></script>
+
+		
+		<script src="__ROOT__/Public/js/think.js"></script>
+		<script src="__ROOT__/Public/plugins/layer/layer.min.js" type="text/javascript"></script>
+		<script>
+		var WSTs = ThinkPHP = window.Think = {
+        "ROOT"   : "__ROOT__",
+        "APP"    : "__APP__",
+        "PUBLIC" : "__PUBLIC__",
+        "DEEP"   : "{:C('URL_PATHINFO_DEPR')}",
+        "MODEL"  : ["{:C('URL_MODEL')}", "{:C('URL_CASE_INSENSITIVE')}", "{:C('URL_HTML_SUFFIX')}"],
+        "VAR"    : ["{:C('VAR_MODULE')}", "{:C('VAR_CONTROLLER')}", "{:C('VAR_ACTION')}"],
+        "DOMAIN" : "{:WSTDomain()}",
+        "CITY_ID" : "{$currArea['areaId']}",
+        "CITY_NAME" : "{$currArea['areaName']}",
+        "DEFAULT_IMG": "{:WSTDomain()}/{$CONF['goodsImg']}",
+        "MALL_NAME" : "{$CONF['mallName']}",
+        "SMS_VERFY"  : "{$CONF['smsVerfy']}",
+        "PHONE_VERFY"  : "{$CONF['phoneVerfy']}",
+        "IS_LOGIN" :"{$WST_IS_LOGIN}"
+}
+
+//打印
+
+function shopOrderAccept(){ 
+	console.log(window.location.href.split("orderId/")[1].split(".html")[0]);
+	var orderids=window.location.href.split("orderId/")[1].split(".html")[0];
+	layer.confirm('您确定打印订单吗？',{icon: 3, title:'系统提示'}, function(tips){
+	    var ll = layer.load('数据处理中，请稍候...');
+			    	layer.close(ll);
+	    	layer.close(tips);
+	    $.post(Think.U('Home/Orders/getOrderDetails'),{orderId:orderids,isJson:1},function(data){
+	    	//layer.close(ll);
+	    	//layer.close(tips);
+			
+			console.log("打印数据关于小票打印")
+			console.log(data);
+			
+			//判断是否是客户端并执行打印
+			
+			if(typeof(isClient)!=='undefined'){	
+				var newarr=[];
+			
+				var totalmoney=Number(data.order.realTotalMoney)+Number(data.order.deliverMoney);
+				
+				for(var i=0;i<data.goodsList.length;i++){
+					var totalPrice=Number(data.goodsList[i].shopPrice)*Number(data.goodsList[i].goodsNums);
+				
+					var optionss = {
+
+							"订单号":data.order.orderNo,
+							"订单明细号":data.goodsList[i].orderId,
+							"产品":data.goodsList[i].goodsName,
+							"数量":Number(data.goodsList[i].goodsNums),
+							"单价":Number(data.goodsList[i].shopPrice),
+							"总计":totalPrice
+					};
+					console.log(i)
+					newarr.push(optionss);
+				}
+				
+				
+								var _reportData1='{"template":"sale_order2.fr3","ver":4, "Tables":[{"Name":"SaleOrder", "Cols":[{ "type": "str", "size": 20, "name": "订单号", "required": false },{ "type": "datetime", "size": 255, "name": "订购日期", "required": false },{ "type": "float", "size": 255, "name": "配送费", "required": false },{ "type": "str", "size": 255, "name": "收件人地址", "required": false },{ "type": "str", "size": 255, "name": "收件人电话", "required": false },{ "type": "str", "size": 255, "name": "收件人", "required": false },{ "type": "str", "size": 255, "name": "合计", "required": false }],"Data":[{"订单号":"'+data.order.orderNo+'","订购日期":"'+data.order.createTime+'","配送费": "'+data.order.deliverMoney+'","收件人地址": "'+data.order.userAddress+'","收件人电话": "'+data.order.userPhone+'","收件人":"'+data.order.userName+'","合计": "'+totalmoney+'"}]},{"Name":"Table1", "Cols":[{ "type": "str", "size": 20, "name": "订单号", "required": false },{ "type": "str", "size": 20, "name": "订单明细号", "required": false },{ "type": "str", "size": 255, "name": "产品", "required": false },{ "type": "float", "size": 255, "name": "数量", "required": false },{ "type": "number", "size": 255, "name": "单价", "required": false },{ "type": "number", "size": 255, "name": "总计", "required": false }],"Data":'+JSON.stringify(newarr)+'}]}';
+				console.log(_reportData1)
+				
+				//开始打印小票===
+				/**下面四个参数必须放在cfreport_custom.js脚本后面，以覆盖cfreport_custom.js中的默认值**/
+				var _delay_send = -1;             //发送打印服务器前延时时长(毫秒)，-1表示不自动打印
+				var _delay_close = -1;          //打印完成后关闭窗口的延时时长(毫秒), -1则表示不关闭
+				var cfprint_addr = "127.0.0.1";   //打印服务器监听地址
+				var cfprint_port = 54321;         //打印服务器监听端口
+				_reportData = _reportData1;				//自动打印的数据变更名称是 _reportData ，所以这里重新赋值一下
+				
+				var getParam = function(){
+				  _delay =500;
+				  _times = 100;
+				  cfprint_addr = "127.0.0.1";
+				  cfprint_port = 54321;
+				}
+				
+				//===========
+				getParam();
+				sendMsg(_reportData1);
+
+				//===========小票打印js12345=====================================================
+				
+				
+			//进行受理
+			
+			$.post(Think.U('Home/Orders/shopOrderAcceptss'),{orderId:id},function(data){
+				//alert("hhhhhhhhhh")
+				layer.close(ll);
+				layer.close(tips);
+				var json = WST.toJson(data);
+				console.log("打印受理")
+				console.log(json)
+				if(json.status>0){
+					$(".wst-tab-nav").find("li").eq(statusMark).click();
+				}else if(json.status==-1){
+						WST.msg('操作失败，订单状态已发生改变，请刷新后再重试 !', {icon: 5}); 
+				}else{
+					WST.msg('操作失败，请与商城管理员联系 !', {icon: 5});
+				}
+			});
+
+
+				
+				//=============小票打印js12345=================================================
+			
+			}else{
+
+			var pcLayer = layer.load('请转移到客户端进行打印...');
+			var element = $("<div></div>");
+			element.append('<p style="text-align:center;font-size:26px;">外卖订单</p>')
+			if(data.order.isPay=="1"){
+				element.append("<p style='text-align:center;font-size:26px;'>(已支付)</p>");
+			}
+			
+			element.append("<p style='text-align:center;'>订单号："+data.order.orderNo+"</p>");
+			element.append("<p style='text-align:center;'>下单时间："+data.order.createTime+"</p>");
+			var dialog = "";
+
+
+
+			for(var i=0;i<data.goodsList.length;i++){
+				
+				
+				dialog+="<li style='text-align:left;height: 30px;line-height: 30px;width:100%;list-style:normal;'>";
+					dialog+="<span style='width:50%;'>"+data.goodsList[i].goodsName+"</span>";
+					dialog+="<span style='padding-left:5px;'>×"+data.goodsList[i].goodsNums+"</span>";
+					dialog+="<span style='width:10%;padding-left:30px;'>"+data.goodsList[i].shopPrice+"</span>";
+				dialog+="</li>";
+
+				
+			}	
+			
+			element.append(dialog);
+			element.append("<p style='text-align:left;'>配送费："+data.order.deliverMoney+"</p>");
+			element.append("<p style='text-align:right;'>原价："+data.order.totalMoney+"</p>");
+			
+			if(data.order.isSelf==1){
+				element.append("<p style='text-align:right;'>配送方式：自提</p>");
+				
+			}else{
+				
+				if(data.order.deliverType==0){
+				
+					element.append("<p style='text-align:right;'>配送方式：商城配送</p>");
+				}else if(data.order.deliverType==1){
+				
+					element.append("<p style='text-align:right;'>配送方式：门店配送</p>");
+				}else if(data.order.deliverType==2){
+				
+					element.append("<p style='text-align:right;'>配送方式：达达配送</p>");
+				}else if(data.order.deliverType==3){
+				
+					element.append("<p style='text-align:right;'>配送方式：蜂鸟配送</p>");
+				}else{
+					
+					element.append("<p style='text-align:right;'>配送方式：无</p>");
+				}
+				
+				
+			}
+			
+			element.append("<p style='text-align:right;'>期望送达时间："+data.order.requireTime+"</p>");
+			element.append("<p style='text-align:right;'>备注："+data.order.orderRemarks+"</p>");
+			
+			element.append("<p style='text-align:right;font-size:26px;font-weight:bold;'>总计："+data.order.realTotalMoney+"</p>");
+			element.append("<p style='text-align:left;font-size:26px;font-weight:bold;'>"+data.order.userName+"</p>");
+			element.append("<p style='text-align:left;font-size:26px;font-weight:bold;'>"+data.order.userPhone+"</p>");
+			element.append("<p style='text-align:left;font-size:26px;font-weight:bold;'>"+data.order.userAddress+"</p>");
+		
+		
+			
+			
+			//LODOP=getLodop();
+			
+            //var strFormHtml ="<body>" + element.html() + "</body>";
+			
+            //LODOP.ADD_PRINT_HTM(40, 80, 257, 800, strFormHtml);
+			//LODOP.SET_PRINT_STYLEA(0, "FontSize", 16);
+
+			//if(LODOP.PRINTA()){
+
+			//	$.post(Think.U('Home/Orders/shopOrderAcceptss'),{orderId:id},function(data){
+			//		layer.close(ll);
+			//		layer.close(tips);
+			//		var json = WST.toJson(data);
+			//		console.log("打印受理")
+			//		console.log(json)
+			//		if(json.status>0){
+			//			$(".wst-tab-nav").find("li").eq(statusMark).click();
+			//		}else if(json.status==-1){
+			//			WST.msg('操作失败，订单状态已发生改变，请刷新后再重试 !', {icon: 5}); 
+			//		}else{
+			//			WST.msg('操作失败，请与商城管理员联系 !', {icon: 5});
+			//		}
+			//	});
+			//}else{
+			//	console.log("放弃打印");
+			//}
+			
+			}
+
+	   });
+	   
+
+	   
+	});
+	//orderAccept2(id);
+}
+	</script>
+    </head>
+    
+    <body style="background-color:#f5f5f5;">
+        <div style="text-align:center;">
+        	<div class="wst-odetal-box">
+        	<table cellspacing="0" cellpadding="0" class="wst-tab" width="920" style="border:1px solid #eeeeee;margin:0 auto;">
+        		<caption class="wst-tab-cpt">日志信息
+        		<span style="color:blue;float:right;">
+        			<if condition='($orderInfo["orderStatus"] eq -3) OR ($orderInfo["orderStatus"] eq -4)'>
+        			拒收<if condition='$orderInfo["isRefund"] eq 1'>(已退款)<else/>(未退款)</if>
+			        <elseif condition='$orderInfo["order"]["orderStatus"] eq -2'/>未付款
+			        <elseif condition='$orderInfo["order"]["orderStatus"] eq -1'/>已取消
+			        <elseif condition='$orderInfo["order"]["orderStatus"] eq 0'/>未受理
+			        <elseif condition='$orderInfo["order"]["orderStatus"] eq 1'/>已受理
+			        <elseif condition='$orderInfo["order"]["orderStatus"] eq 2'/>打包中
+			        <elseif condition='$orderInfo["order"]["orderStatus"] eq 3'/>配送中
+			        <elseif condition='$orderInfo["order"]["orderStatus"] eq 4'/>已到货
+			        <elseif condition='$orderInfo["order"]["orderStatus"] eq 5'/>确认已收货
+			        </if>
+        		</caption>
+        		</span>
+        		<tbody>
+	        		<volist name="orderInfo['logs']" id="log" key='key1'>
+	        		<tr>
+	        			<td width="200">{$log["logTime"]}</td>
+	        			<td class="wst-td-content">{$log["logContent"]}</td>
+	        		</tr>
+	        		</volist>
+        		</tbody>
+        	</table>
+        	</div>
+        	<br/><br/>
+        	<div class="wst-odetal-box">
+        	<table cellspacing="0" cellpadding="0" class="wst-tab" width="920" style="border:1px solid #eeeeee;margin:0 auto;">
+        		<caption class="wst-tab-cpt">订单信息</caption>
+        		<tbody>
+	        		<tr>
+	        			<td class="wst-td-title">订单编号：</td>
+	        			<td class="wst-td-content">{$orderInfo["order"]["orderNo"]}</td>
+	        		</tr>
+	        		<tr>
+	        			<td class="wst-td-title">支付方式：</td>
+	        			<td class="wst-td-content"><if condition='$orderInfo["order"]["payType"]==0'>货到付款<else/>在线支付</if></td>
+	        		</tr>
+	        		<tr>
+	        			<td class="wst-td-title">配送方式：</td>
+	        			<td class="wst-td-content">
+	        				<if condition='$orderInfo["order"]["isSelf"]==1'>
+	        					自提
+	        				<else/>
+								<?php
+									switch($orderInfo["order"]["deliverType"]){
+										case 0:
+											echo '商城配送';
+										break;
+										case 1:
+											echo '门店配送';
+										break;
+										case 2:
+											echo '达达配送';
+										break;
+										case 3:
+											echo '蜂鸟配送';
+										break;
+										default:
+
+									}
+
+								?>
+	        					
+	        				</if>
+	        			</td>
+	        		</tr>
+	        		<tr>
+	        		    <td class="wst-td-title">买家留言：</td>
+	        		    <td class="wst-td-content">{$orderInfo["order"]["orderRemarks"]}</td>
+	        		</tr>
+	        		<tr>
+	        			<td class="wst-td-title">下单时间：</td>
+	        			<td class="wst-td-content">{$orderInfo["order"]["createTime"]}</td>
+	        		</tr>
+        		</tbody>
+        	</table>
+        	</div>
+        	<br/><br/>
+        	<div class="wst-odetal-box">
+        	<table cellspacing="0" cellpadding="0" class="wst-tab" width="920" style="border:1px solid #eeeeee;margin:0 auto;">
+        		<caption class="wst-tab-cpt">收货人信息</caption>
+        		<tbody>
+	        		
+	        		<tr>
+	        			<td class="wst-td-title">收货人姓名：</td>
+	        			<td class="wst-td-content">{$orderInfo["order"]["userName"]}</td>
+	        		</tr>
+	        		<tr>
+	        			<td class="wst-td-title">地址：</td>
+	        			<td class="wst-td-content">{$orderInfo["order"]["userAddress"]} </td>
+	        		</tr>
+	        		<tr>
+	        			<td class="wst-td-title">联系电话：</td>
+	        			<td class="wst-td-content">{$orderInfo["order"]["userPhone"]} <if condition='$orderInfo["order"]["userTel"] neq ""'>| {$orderInfo["order"]["userTel"]}</if></td>
+	        		</tr>
+	        		<tr>
+	        			<td class="wst-td-title">期望送达时间：</td>
+	        			<td class="wst-td-content">{$orderInfo["order"]["requireTime"]}</td>
+	        		</tr>
+        		</tbody>
+        	</table>
+        	</div>
+        	<br/><br/>
+        	<notempty name='orderInfo["order"]["invoiceClient"]'>
+        	<div class="wst-odetal-box">
+        	<table cellspacing="0" cellpadding="0" class="wst-tab" width="920" style="border:1px solid #eeeeee;margin:0 auto;">
+        		<caption class="wst-tab-cpt">发票信息</caption>
+        		<tbody>
+	        		<tr>
+	        			<td class="wst-td-title">发票抬头：</td>
+	        			<td class="wst-td-content">{$orderInfo["order"]["invoiceClient"]}</td>
+	        		</tr>
+        		</tbody>
+        	</table>
+        	</div> 
+        	</notempty>       	
+        	<div class="wst-odetal-box" style='padding-bottom:5px;'>
+        	<table cellspacing="0" cellpadding="0" class="wst-tab" width="920" style="margin:0 auto;">
+        		<caption class="wst-tab-cpt">商品信息</caption>
+        		<tbody>
+	        		<tr>
+	        			<td width='*' class="wst-align-center">商品</td>
+	        			<td width='150' class="wst-align-center">商品价格</td>
+	        			<td width='150' class="wst-align-center">商品数量</td>
+	        			<td width='150' class="wst-align-center">商品总金额</td>
+	        		</tr>
+	        		<volist name="orderInfo['goodsList']" id="goods" key='key1'>
+	        		<tr>
+	        			<td class="wst-align-center" style="vertical-align: middle;">
+		        			<div style="float:left;width:50px;">
+			        			<a href="{:U('Home/Goods/getGoodsDetails/',array('goodsId'=>$goods['goodsId']))}" target="_blank">
+			        			   <img style='margin:2px;' src="__ROOT__/{$goods['goodsThums']}" width='50' height='50'/>
+			        			</a>
+		        			</div>
+		        			<div style="float:left;width:360px;text-align: left;vertical-align: middle;margin-left: 8px;line-height: 20px;padding-top:15px;">
+		        				<a href="{:U('Home/Goods/getGoodsDetails/',array('goodsId'=>$goods['goodsId']))}__ROOT__/index.php/Home/Goods/getGoodsDetails/?goodsId={$goods['goodsId']}" target="_blank">
+		        				{$goods["goodsName"]}<if condition="$goods['goodsAttrName'] neq ''">【{$goods['goodsAttrName']}】</if>
+		        				</a>
+		        			</div>
+		        			<div class="wst-clear"></div>
+	        			</td>
+	        			<td class="wst-align-center">￥{$goods["shopPrice"]}</td>
+	        			<td class="wst-align-center">{$goods["goodsNums"]}</td>
+	        			<td class="wst-align-center">￥{$goods["shopPrice"]*$goods["goodsNums"]}</td>
+	        		</tr>
+	        		</volist>
+        		</tbody>
+        		<tr>
+        		   <td colspan='4' style='border-left:0px;border-right:0px;border-bottom:0px;text-align:right;padding-right:5px;'>
+        		  商品总金额： ￥{$orderInfo["order"]["totalMoney"]}  <br/>
+        		   + 运费：￥{$orderInfo["order"]["deliverMoney"]}<br/>
+        			<if condition='$orderInfo["order"]["useScore"] gt 0'>
+        			使用积分：{$orderInfo["order"]["useScore"]} 点<br/>
+        			</if>
+        		    订单总金额：<span style='font-weight:bold;font-size:20px;color:red;'>￥{$orderInfo["order"]["totalMoney"]+$orderInfo["order"]["deliverMoney"]}</span><br/>
+        		   <span style='font-weight:bold;font-size:20px;'>实付总金额：</span><span style='font-weight:bold;font-size:20px;color:red;'>￥{$orderInfo["order"]["realTotalMoney"]}</span>
+        		   
+				   	<div onclick="shopOrderAccept()" style="text-align: center;padding: 40px 0;">
+					<a style="text-align: center;padding: 9px 15px;color: #fff;background: #ff8000;border-radius: 4px;cursor: pointer;">打印订单</a>
+					</div>
+				   
+				   </td>
+
+        		</tr>
+        	</table>
+        	</div>
+        </div>
+		
+    </body>
+	
+
+</html>

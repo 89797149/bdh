@@ -1,0 +1,529 @@
+<!doctype html>
+<html>
+
+<head>
+  <meta charset="utf-8" />
+  <meta http-equiv="X-UA-Compatible" content="Chrome=1,IE=edge" />
+  <meta name="baidu-site-verification" content="fchvDjhZJD" />
+
+  <title><?php echo $config['mallTitle'];?></title>
+  <meta name="keywords" content="<?php echo $config['mallKeywords'];?>">
+  <meta name="description"
+    content="<?php echo $config['mallDesc'];?>">
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+  <meta name="apple-touch-fullscreen" content="YES" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="format-detection" content="telephone=no" />
+  <!--<meta name="viewport" content="width=device-width, initial-scale=1">-->
+  <meta name="apple-touch-fullscreen" content="YES" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="format-detection" content="telephone=no" />
+  <link type="image/x-icon" rel="shortcut icon" href="/<?php echo $config['mallLogo'];?>" />
+  <link rel="stylesheet" href="__ROOT__/Apps/Home/View/pc/css/style.css" data-version="@VERSION@">
+  <link rel="stylesheet" href="__ROOT__/Apps/Home/View/pc/css/index.css">
+  <!--<link rel="stylesheet" href="-->
+  <!--/css/responsive.css">-->
+</head>
+<body>
+  <div id="page">
+    <div id="header" class="container">
+
+      <div class="ipone_nav_icon_box">
+        <!-- 菜单图标 -->
+        <img class="ipone_nav_icon" src="/Apps/Home/View/pc/images/nav_icon.png" alt="">
+
+      </div>
+      <!-- 分辨率小于 767px 隐藏 -->
+      <div class="floarL"><img class="ipone_navList_info_icon" src="/Apps/Home/View/pc/images/logo.png" alt=""/></div>
+      <div class="nav floatR">
+        <ul>
+          <li class="first active"><a href="/">首页</a></li>
+          <li class=" "><a href="{:U('index/aboutus')}">关于我们</a></li>
+          <li class=""><a href="{:U('index/ourwork')}">快乐工作</a></li>
+          <li class="last "><a href="{:U('index/talent')}">加入我们</a></li>
+        </ul>
+      </div>
+
+      <!-- 分辨率小于 767px 展示 -->
+      <div class="ipone_nav">
+
+
+        <!-- 菜单列表 -->
+        <div class="ipone_navList">
+          <!-- 遮罩层 -->
+          <div class="mark"></div>
+          <!-- 小三角 -->
+          <div class="triangle"></div>
+          <!-- 列表 -->
+          <div class="ipone_navList_info">
+            <ul class="ipone_navList_info_icon_ul">
+              <li class="first active">
+                <img class="ipone_navList_info_icon" src="/Apps/Home/View/pc/images/logo.png" alt=""/>
+                <a href="/">首页</a></li>
+              <li class=" ">
+                <img class="ipone_navList_info_icon" src="/Apps/Home/View/pc/images/about_us.png" alt="">
+
+
+
+                <a href="{:U('index/aboutus')}">关于我们</a></li>
+              <li class="">
+                <img class="ipone_navList_info_icon" src="/Apps/Home/View/pc/images/happy_work.png" alt="">
+                <a href="{:U('index/ourwork')}">快乐工作</a></li>
+              <li class="last ">
+
+                <img class="ipone_navList_info_icon" src="/Apps/Home/View/pc/images/join_us.png" alt="">
+                <a href="{:U('index/talent')}">加入我们</a></li>
+            </ul>
+
+          </div>
+
+        </div>
+
+
+
+      </div>
+
+      <div class="clear"></div>
+    </div>
+    <div id="content" style="background-color:#fff;">
+      <link href="__ROOT__/Apps/Home/View/pc/royalslider/royalslider.css" rel="stylesheet">
+      <script src="__ROOT__/Apps/Home/View/pc/royalslider/jquery-1.8.3.min.js"></script>
+      <script src="__ROOT__/Apps/Home/View/pc/royalslider/jquery.royalslider.min.js?v=9.3.6"></script>
+
+      <link href="__ROOT__/Apps/Home/View/pc/preview-assets/css/reset.css?v=1.0.4" rel="stylesheet">
+
+
+      <link href="__ROOT__/Apps/Home/View/pc/royalslider/skins/minimal-white/rs-minimal-white.css?v=1.0.4"
+        rel="stylesheet">
+      <style>
+        #full-width-slider {
+          width: 100%;
+          color: #000;
+        }
+
+        .coloredBlock {
+          padding: 12px;
+          background: rgba(255, 0, 0, 0.6);
+          color: #FFF;
+          width: 200px;
+          left: 20%;
+          top: 5%;
+        }
+
+        .infoBlock {
+          position: absolute;
+          top: 30px;
+          right: 30px;
+          left: auto;
+          max-width: 25%;
+          padding-bottom: 0;
+          background: #FFF;
+          background: rgba(255, 255, 255, 0.8);
+          overflow: hidden;
+          padding: 20px;
+        }
+
+        .infoBlockLeftBlack {
+          color: #FFF;
+          background: #000;
+          background: rgba(0, 0, 0, 0.75);
+          left: 30px;
+          right: auto;
+        }
+
+        .infoBlock h4 {
+          font-size: 20px;
+          line-height: 1.2;
+          margin: 0;
+          padding-bottom: 3px;
+        }
+
+        .infoBlock p {
+          font-size: 14px;
+          margin: 4px 0 0;
+        }
+
+        .infoBlock a {
+          color: #FFF;
+          text-decoration: underline;
+        }
+
+        .photosBy {
+          position: absolute;
+          line-height: 24px;
+          font-size: 12px;
+          background: #FFF;
+          color: #000;
+          padding: 0px 10px;
+          position: absolute;
+          left: 12px;
+          bottom: 12px;
+          top: auto;
+          border-radius: 2px;
+          z-index: 25;
+        }
+
+        .photosBy a {
+          color: #000;
+        }
+
+        .fullWidth {
+          max-width: 1400px;
+          margin: 0 auto 24px;
+        }
+
+
+        @media only screen and (max-width: 767px) and (min-width: 500px) {
+          .ipone_nav_icon {
+            width: 8%;
+            margin-top: 10px !important;
+            margin-right: 10px;
+            float: right;
+          }
+        }
+
+
+
+
+        /* ***************************************************************** */
+        /* 320----767px 分辨率 */
+
+        @media only screen and (min-width: 320px) and (max-width: 767px) {
+
+          .container,
+          #header,
+          #main {
+            width: 95% !important;
+          }
+
+          #header .logo {
+            background-size: 65% !important;
+            margin-top: 19px;
+            position: fixed;
+            top: 0;
+            z-index: 2;
+          }
+
+
+          .ipone_nav_icon_box {
+            position: fixed;
+            top: 0;
+            z-index: 1;
+            width: 100%;
+            left: 0;
+            background: #fff;
+            height: 75px;
+          }
+
+          /* header Start */
+          #header .nav {
+            display: none;
+          }
+
+
+          /* 320-767 显示导航 */
+          .ipone_navList {
+            display: none;
+          }
+
+          .ipone_nav {
+            display: block;
+          }
+
+
+          .mark {
+            background: rgba(0, 0, 0, 0.3) !important;
+
+            position: fixed;
+            width: 100%;
+            height: 100%;
+            left: 0;
+            right: 0;
+            z-index: 40;
+            bottom: 0;
+            top: 75px;
+          }
+
+          .ipone_navList_info {
+            /* transition: all .3s linear; */
+            display: none;
+            position: fixed;
+            top: 90px;
+            right: 6px;
+            z-index: 41;
+            height: auto;
+            padding: 0 25px;
+            background: #fff;
+            border-radius: 4px;
+          }
+
+          .ipone_nav_icon {
+            width: 8%;
+            margin-top: 25px;
+            margin-right: 10px;
+            float: right;
+          }
+
+
+          .ipone_navList_info ul li {
+            padding: 10px 0;
+          }
+
+          .triangle {
+            position: fixed;
+            top: 82px;
+            z-index: 41;
+            background: #fff;
+            width: 15px;
+            height: 15px;
+            right: 26px;
+            filter: progid:DXImageTransform.Microsoft.BasicImage(rotation=3);
+            -moz-transform: rotate(135deg);
+            -o-transform: rotate(135deg);
+            -webkit-transform: rotate(135deg);
+            transform: rotate(135deg)
+          }
+
+          .ipone_navList_info_icon_ul {
+            margin: 0;
+          }
+
+          .ipone_navList_info_icon {
+            width: 20px;
+            height: auto;
+            display: block;
+            float: left;
+            padding: 0 10px;
+          }
+
+
+
+
+
+
+
+
+
+
+          /* header END */
+
+          .heroSlider .rsOverflow,
+          .royalSlider.heroSlider {
+            height: 520px !important;
+          }
+
+          .server img {
+            display: block;
+            width: 97%;
+            height: auto;
+            margin: 0 auto;
+          }
+
+          .news .clear {
+            width: 70% !important;
+            margin: 0 0 12px 33px;
+          }
+
+          .all-news {
+            margin-left: 33px;
+          }
+
+          .news h2 img {
+            width: 50%;
+            height: auto;
+            margin: 0 0 0 10px;
+          }
+
+
+        }
+
+
+
+
+
+        /* ***************************************************************** */
+
+
+        @media screen and (min-width:960px) and (min-height:660px) {
+
+          #header .nav {
+            display: block;
+          }
+
+          .ipone_nav {
+            display: none;
+          }
+
+          .ipone_navList {
+            display: block;
+          }
+
+          .heroSlider .rsOverflow,
+          .royalSlider.heroSlider {
+            height: 520px !important;
+          }
+        }
+
+        @media screen and (min-width:768px) and (max-width:999999px) {
+
+          #header .nav {
+            display: block !important;
+          }
+
+          #header .ipone_nav {
+            display: none;
+          }
+
+          .ipone_nav_icon_box {
+            display: none;
+          }
+
+          .ipone_navList_info {
+            display: none;
+          }
+        }
+
+        @media screen and (min-width:960px) and (min-width:1000px) {
+
+          .heroSlider .rsOverflow,
+          .royalSlider.heroSlider {
+            height: 660px !important;
+          }
+        }
+
+        @media screen and (min-width: 0px) and (max-width: 800px) {
+
+          .royalSlider.heroSlider,
+          .royalSlider.heroSlider .rsOverflow {
+            height: 180px !important;
+          }
+
+          .infoBlock {
+            padding: 10px;
+            height: auto;
+            max-height: 100%;
+            min-width: 40%;
+            left: 5px;
+            top: 5px;
+            right: auto;
+            font-size: 12px;
+          }
+
+          .infoBlock h3 {
+            font-size: 14px;
+            line-height: 17px;
+          }
+        }
+
+        .rsContent img {
+          display: block;
+        }
+      </style>
+
+      </head>
+
+      <body>
+
+        <!-- <div class="page wrapper main-wrapper">
+          <div class="row clearfix">
+            <div id="page-navigation" class="col span_6">
+
+              <div class="left page-nav-item"></div>
+
+
+              <div class="right page-nav-item"></div>
+
+
+            </div>
+          </div>
+        </div> -->
+        <div class="sliderContainer fullWidth clearfix">
+          <div id="full-width-slider" class="royalSlider heroSlider rsMinW">
+             <span><img class="ipone_navList_info_icon" src="/Apps/Home/View/pc/images/banner1.jpg" alt=""/></span>
+            <span><img class="ipone_navList_info_icon" src="/Apps/Home/View/pc/images/banner2.jpg" alt=""/></span>
+             <span><img class="ipone_navList_info_icon" src="/Apps/Home/View/pc/images/banner3.jpg" alt=""/></span>
+          </div>
+        </div>
+
+        <script>
+          jQuery(document).ready(function ($) {
+            $('#full-width-slider').royalSlider({
+              // arrowsNav: true,
+              // loop: true,
+              // keyboardNavEnabled: true,
+              // controlsInside: false,
+              imageScaleMode: 'fill',
+              // arrowsNavAutoHide: false,
+              // autoScaleSlider: true,
+              // autoScaleSliderWidth: 960,
+              // autoScaleSliderHeight: 350,
+              // controlNavigation: 'bullets',
+              // thumbsFitInViewport: false,
+              // navigateByClick: true,
+              // startSlideId: 0,
+              autoPlay: true,
+              // transitionType: 'move',
+              // globalCaption: true,
+              // deeplinking: {
+              //   enabled: true,
+              //   change: false
+              // },
+
+              // imgWidth: 1920,
+              // imgHeight: 580
+            });
+          });
+
+
+          // 导航栏点击事件
+          $(".ipone_nav_icon").click(function () {
+            $(".ipone_navList").stop().slideToggle("slow");
+            $(".ipone_navList_info").stop().slideToggle("slow");
+
+          });
+
+
+          // 点击遮罩层关闭右侧边栏
+          $('.mark').click(function () {
+            $(".ipone_navList").slideUp();
+            $(".ipone_navList_info").slideUp()
+          })
+
+
+
+
+
+        </script>
+        <div id="main">
+            <div style="text-align:center;font-size:32px;margin: 90px 0 50px;">精品推荐</div>
+            <ul class="goodsul">
+             <li><img src="/Apps/Home/View/pc/images/tupian1.jpg" /></li>
+             <li><img src="/Apps/Home/View/pc/images/tupian2.jpg" /></li>
+             <li><img src="/Apps/Home/View/pc/images/tupian3.jpg" /></li>
+             <li><img src="/Apps/Home/View/pc/images/tupian4.jpg" /></li>
+             <li><img src="/Apps/Home/View/pc/images/tupian5.jpg" /></li>
+             <li><img src="/Apps/Home/View/pc/images/tupian6.jpg" /></li>
+            </ul>
+        </div>
+    </div>
+    <div id="footer">
+      <p class="link">
+        <a href="{:U('index/download')}" target="_blank">APP下载</a> <span>|</span>
+        <a href="{:U('index/media')}">媒体资料</a> <span>|</span>
+        <a href="{:U('index/contactus')}">联系我们</a>
+      </p>
+      <p class="copyright">
+        &copy;<?php echo htmlspecialchars_decode($config['mallFooter']);?>
+      </p>
+      <!--<p class="license">
+        <a target="_blank" href="http://beian.miit.gov.cn" style="display:inline-block;text-decoration:none;">
+          <img src="/Apps/Home/View/pc/images/beian.png" style="float:left;" />
+          <span style="float:left; padding-left: 10px;"> 苏ICP备19021499号-1</span>
+        </a>
+      </p>-->
+    </div>
+
+  </div>
+</body>
+
+</html>

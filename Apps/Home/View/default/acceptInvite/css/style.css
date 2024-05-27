@@ -1,0 +1,174 @@
+html,
+body {
+	height: 100%;
+	background-color: #f5f5f5;
+	margin: 0;
+	padding: 0;
+}
+
+.content {
+	height: 100%;
+	text-align: center;
+	background-color: #f5f5f5;
+}
+
+.inside {
+	width: 720px;
+	margin: 0 auto;
+	background-color: #f5f5f5;
+}
+
+.banner img {
+	width: 100%;
+}
+
+.form {
+	margin-top: 80px;
+}
+
+.form p {
+	margin-bottom: 20px;
+	position: relative;
+}
+
+.errTip {
+	position: absolute;
+	width: 100%;
+	left: 80px;
+	top: 82px;
+	color: red;
+	text-align: left;
+}
+
+input {
+	width: 542px;
+	height: 82px;
+	padding: 0 15px;
+	border: 1px solid #d5d5d5;
+	border-radius: 4px;
+	font-size: 16px;
+}
+
+input[name="verify"] {
+	width: 370px;
+}
+
+
+.codeImg {
+	display: inline-block;
+	width: 135px;
+	height: 82px;
+	vertical-align: middle;
+	margin-left: 36px;
+	cursor: pointer;
+}
+
+.tip {
+	margin: 0 50px;
+	padding: 10px;
+	font-size: 24px;
+	color: #7c7c7c;
+	line-height: 2;
+	border: 1px dashed #2e6cc3;
+	border-radius: 10px;
+}
+
+.contact {
+	margin: 45px 0;
+}
+
+
+.VerificationCodeCnt {
+	display: flex;
+	width: 100%;
+}
+
+.getVerificationCode {
+	font-size: 18px;
+	width: 30%;
+	height: 45px;
+	line-height: 45px;
+	text-align: center;
+	/* margin-left: 36px; */
+	border: 1px solid #fff;
+    background: #35C35F;
+    border-radius: 5px;
+    color: #fff;
+}
+
+.acceptBtn {
+	width: 80%;
+	margin: 0 auto;
+	font-size: 18px;
+	color: #fff;
+	font-weight: 600;
+}
+
+
+.acceptInfo {
+	height: 50px;
+	line-height: 50px;
+	border-radius: 30px;
+	background: -moz-linear-gradient(top, #2AD759 15%, #30CC5E 30%, #35C35F 100%);
+	background: -webkit-gradient(linear, left top, left bottom, color-stop(15%, #2AD759), color-stop(100%, #35C35F));
+	background: -webkit-linear-gradient(top, #2AD759 15%, #30CC5E 30%, #35C35F 100%);
+	background: -o-linear-gradient(top, #2AD759 15%, #30CC5E 30%, #35C35F 100%);
+	background: -ms-linear-gradient(top, #2AD759 15%, #30CC5E 30%, #35C35F 100%);
+	background: linear-gradient(to bottom, #2AD759 15%, #30CC5E 30%, #35C35F 100%);
+}
+
+
+
+#qrcodes {
+	padding: 20px 0;
+	width: 32%;
+	text-align: center;
+}
+
+.qrcodes_text {
+	margin: 20px auto;
+	color: #3a3a3a;
+	font-size: 15px;
+    display: inline-block;
+}
+
+
+@media (max-width:719px) {
+	.inside {
+		width: 100%;
+	}
+
+	.form {
+		margin-top: 20px;
+		padding: 0 10px;
+	}
+
+	input {
+		width: 83%;
+		height: 45px;
+	}
+
+
+	input[name="verify"] {
+		width: 76%;
+	}
+
+	.codeImg {
+		width: 60px;
+		height: 30px;
+		margin-left: 0;
+	}
+
+	.tip {
+		font-size: 12px;
+	}
+
+	.contact img {
+		height: 25px;
+	}
+
+	.errTip {
+		top: 45px;
+		left: 20px
+	}
+}

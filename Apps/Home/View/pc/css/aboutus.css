@@ -1,0 +1,113 @@
+#main {
+    width: 980px;
+}
+
+/* .aboutus { 
+    text-align: center;
+} */
+
+.aboutus h2 {
+    margin-bottom: 49px;
+}
+
+.aboutus p {
+    font-size: 18px;
+    padding: 3px 0;
+}
+
+.banner {
+    margin: 49px auto 60px;
+    height: 150px;
+    background: url('../images/about.jpg') no-repeat center center;
+}
+
+.course {}
+
+.course table {}
+
+.course table td {
+    vertical-align: top;
+    padding-top: 10px;
+}
+
+.course table td.left {
+    width: 479px;
+}
+
+.course table td.center {
+    width: 22px;
+}
+
+.course table td.right {
+    width: 479px;
+}
+
+.course table td.td_left,
+.course table td.td_right {
+    height: 125px;
+}
+
+.course table td div.td_dot_left,
+.course table td div.td_dot_right {
+    width: 100%;
+    height: 100%;
+    padding-top: 1px;
+    padding-bottom: 1px;
+}
+
+.course table td.td_left {
+    padding-left: 69px;
+}
+
+.course table td.td_right {
+    padding-left: 0px;
+}
+
+.course table td.td_left_bg {
+    background: url('../images/aboutus_line_l.png') no-repeat 69px bottom;
+}
+
+.course table td.td_right_bg {
+    background: url('../images/aboutus_line_r.png') no-repeat 10px bottom;
+}
+
+.td_dot_left {
+    background: url('../images/dot_title.png') no-repeat right 10px;
+    vertical-align: bottom;
+}
+
+.td_dot_right {
+    background: url('../images/dot_title.png') no-repeat left 10px;
+    vertical-align: bottom;
+}
+
+.course table td .date {
+    margin-top: 55px;
+    height: 60px;
+    line-height: 60px;
+    color: #999999;
+}
+
+.course table td.td_left .date,
+.course table td.td_left .course_content {
+    padding-top: 1px;
+    text-indent: 20px;
+}
+
+.course table td.td_right .date,
+.course table td.td_right .course_content {
+    padding-top: 1px;
+    text-indent: 30px;
+}
+
+.course table td.td_right .date {
+    text-indent: 50px;
+}
+
+.course table td .month .day {
+    font-size: 20px;
+}
+
+.course table td .date .day {
+    font-size: 40px;
+}

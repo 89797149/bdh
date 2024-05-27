@@ -1,0 +1,193 @@
+<extend name="./Apps/Home/View/default/shops/layout.html" />
+<block name="content">
+	<script>
+	var statusMark = 0;
+	$(function () {
+		//$('#tab').TabPanel({tab:statusMark,callback:function(tab){
+
+		//	switch(tab){
+		//	   case 0:queryOrderPager(0);break;
+
+		//	}
+		//}});
+		
+		
+		
+
+	});
+	
+	function ztquerySettlementsByPage(){
+		var ztmcode=$(".ztm").val();
+		ztqueryOrderPager(2,0,ztmcode);
+	}
+	
+	
+	
+	function ztqueryOrderPager(statusMark,pcurr,sources){
+
+	var param = {};
+	
+	param.source =sources;
+
+	var ll = layer.load('数据加载中，请稍候...');
+	$.post(Think.U('Home/orderSettlements/queryCouponsOrders'),param,function(data,textStatus){
+			
+			console.log(data)
+			
+			if(data!==null){
+			var json = WST.toJson(data);
+			//$(".wst-order-tips-box").html(json.root.length);
+			//console.log(json)
+			var html = new Array();
+			$("#otbody2").empty();
+			var tmpMsg = '';
+			
+
+				//for(var i=0;i<json.length;i++){
+					var order = json;
+					html.push("<tr class='listHr' style='color:"+((order.orderStatus==-6 || order.orderStatus==-3)?"red":"blue")+";'>");
+						html.push("<td width='20'><input type='checkbox' class='chk_"+order.orderStatus+"' value='"+order.orderId+"'/></td>");
+					
+					html.push("<td width='100'><a href='javascript:;' style='color:"+((order.orderStatus==-6 || order.orderStatus==-3)?"red":"blue")+";font-weight:bold;' onclick=showOrder('"+order.orderId+"')>"+order.orderNo+"</a></td>");
+					html.push("<td width='100'>"+order.userName+"</td>");
+
+						
+						html.push("<td width='*'>"+order.userAddress+"</td>");
+					
+
+					html.push("<td width='100'>"+order.totalMoney+"</td>");
+					html.push("<td width='100' style='font-weight:bold;'>"+order.realTotalMoney+"</td>");
+					html.push("<td width='100'><div style='line-height:20px;'>"+order.createTime+"</div></td>");
+					html.push("<td width='100'>");
+					html.push("<a href='javascript:;' style='color:"+((order.orderStatus==-6 || order.orderStatus==-3)?"red":"blue")+"' onclick=showOrder('"+order.orderId+"')>查看</a>");
+
+
+							html.push(" | <a href='javascript:;' style='color:"+((order.orderStatus==-6 || order.orderStatus==-3)?"red":"blue")+"' onclick=ztshopOrderDelivery('"+order.orderId+"','"+order.orderId+order.userId+order.shopId+"')>提货</a>");
+
+
+					html.push("</td>");
+				    html.push("</tr>");
+
+				
+				$("#otbody2").html(html.join(""));
+			
+				layer.close(ll);
+				if(json.totalPage>1){
+				   laypage({
+						 cont: "wst-page-2", 
+						 pages: json.totalPage, 
+						 curr: json.currPage,
+						 skin: '#e23e3d',
+						 groups: 3,
+						 jump: function(e, first){
+							 if(!first){
+								 queryOrderPager(statusMark,e.curr);
+							 }   
+						 } 
+					});
+			   }else{
+				   //$('#otbody2').remove();
+			   }
+
+
+			}else{
+				layer.close(ll);
+				WST.msg('无效的自提码，暂无查询结果!', {icon: 5});
+				$('.listHr').remove();
+			}
+			
+		});
+}
+	
+	//发货配送
+	function ztshopOrderDelivery(id,source){
+
+		layer.confirm('确定提货吗？',{icon: 3, title:'系统提示'}, function(tips){
+			var ll = layer.load('数据处理中，请稍候...');
+			$.post(Think.U('Home/Orders/shopOrderDelivery'),{orderId:id,source:source},function(data){
+				layer.close(ll);
+				layer.close(tips);
+				var json = WST.toJson(data);
+				if(json.status>0){
+					$('.listHr').remove();
+				}else if(json.status==-1){
+					WST.msg('操作失败，订单状态已发生改变，请刷新后再重试 !', {icon: 5});
+				}else{
+					WST.msg('操作失败，请与商城管理员联系 !', {icon: 5});
+				}
+		   });
+		});
+	}
+	
+	
+	</script>
+	<div class="wst-body" style="margin-bottom: 8px;"> 
+		<div class='wst-page-header'>卖家中心 > 自提订单</div>
+		<div class='wst-page-content' style="padding-top:10px;">
+		   <div id='tab' class="wst-tab-box">
+			<ul class="wst-tab-nav">
+				<li id="wst-msg-li-2">自提码<span style="display:none;"></span></li>
+
+			</ul>
+			<div class="wst-tab-content" style='width:98%;'>
+			    <!-- 结算信息 -->
+				<div class='wst-tab-item'>
+					<div>
+						<table class='wst-list listHeaderInput' style="font-size:13px;">
+							<thead>
+								<tr>
+									<th colspan="10" class="wst-form">
+									自提码：<input class="ztm type="text" id="settlementNo_2" style='width:120px;' autocomplete="off"/>
+
+									<button class='wst-btn-query' onclick="ztquerySettlementsByPage()">查询</button>
+
+									</th>
+								</tr>
+								<tr>
+								    <th width='20'>&nbsp;</th>
+									<th width='100'>订单号</th>
+									<th width='70'>收货人</th>
+									<th width='*'>收货地址</th>
+									<th width='60'>订单金额</th>
+									<th width='60'>实付金额</th>
+									
+									<th width='140'>下单时间</th>
+									
+									<th width='*'>操作</th>
+								</tr>
+							</thead>
+							<script id="tblist2" type="text/html">
+							{{# for(var i = 0; i < d.length; i++){ }}
+							<tr>
+								<td>{{i+1}}</td>
+							    <td><a href='javascript:view("{{d[i].settlementNo}}")'>{{d[i].settlementNo}}</a></td>
+								<td>{{# if(d[i].settlementType==1){ }}定时{{# }else{ }}手动{{# } }}</td>
+                                <td>{{d[i].orderMoney}}</td>
+								<td>{{d[i].settlementMoney}}</td>
+                                <td>{{d[i].poundageMoney}}</td>
+                                <td>{{d[i].createTime}}</td>
+								<td>{{# if(d[i].isFinish==1){ }}已结算{{# }else{ }}未结算{{# } }}</td>
+                                <td>{{WST.blank(d[i].finishTime,'-')}}</td> 
+                                <td>{{WST.blank(d[i].remarks)}}</td>
+							</tr>
+							{{# } }}
+                            </script>
+							<tbody id="otbody2"></tbody>
+							<tfoot>
+								<tr>
+									<td colspan='10' align='center' id="opage_2">
+										<div id="wst-page-2" class='wst-page' style="float:right;padding-bottom:10px;"></div>
+									</td>
+								</tr>
+							 </tfoot>
+						</table>
+					</div>
+					<div style='clear:both;'></div>
+				</div>
+			</div>
+			</div>
+		</div>
+		<div style='clear:both;'></div>
+	</div>
+	<script src="__ROOT__/Apps/Home/View/default/js/settlements.js"></script>
+</block>  

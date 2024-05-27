@@ -1,0 +1,206 @@
+<!DOCTYPE html>
+<html lang="zh-cn">
+<head>
+<meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<link rel="shortcut icon" href="favicon.ico"/>
+<title>{$CONF['mallTitle']}</title>
+<meta name="keywords" content="{$CONF['mallKeywords']}" />
+<meta name="description" content="{$CONF['mallDesc']}" />
+<link rel="stylesheet" href="__ROOT__/Apps/Home/View/default/css/common.css" />
+<link rel="stylesheet" href="__ROOT__/Apps/Home/View/default/css/index.css" />
+<link rel="stylesheet" href="__ROOT__/Apps/Home/View/default/css/base.css" />
+<link rel="stylesheet" href="__ROOT__/Apps/Home/View/default/css/head.css" />
+<link rel="stylesheet" href="//at.alicdn.com/t/font_490692_chudwntp5q.css" />
+
+<style type="text/css">
+		
+		.dianTi{
+			width: 30px;
+			position: fixed;
+			left: 50%;
+			top: 50%;
+			margin-left: -650px;
+			display: none;
+		}
+		.dianTi li{
+			cursor: pointer;
+			height: 29px;
+			border-bottom: 1px dotted #ccc;
+			text-align: center;
+			line-height: 29px;
+			position: relative;
+		}
+		.dianTi li:hover .wenZi{
+			display: block;
+			background-color: #C81623;
+			color: #fff;
+		}
+		.current .wenZi{
+			display: block;
+		}
+		.wenZi{
+			position: absolute;
+			width: 100%;
+			height: 100%;
+			left: 0;
+			top: 0;
+			text-align: center;
+			line-height: 29px;
+			color: #C81623;
+			background-color: #fff;
+			display: none;
+		}
+
+	</style>
+
+
+</head>
+<body>
+	<include file="./Apps/Home/View/default/header_common.html" />
+	<!----加载广告start----->
+	<div class="wst-ad" >
+		<div class="wst-slide" id="wst-slide">
+			<ul class="wst-slide-items">
+				<volist name=":WSTAds(-1)" id="vo" key="k">
+				<li style="z-index: 1;"><a target="_blank" onclick="addAccess({$vo['adId']})" href="{$vo['adURL']}">
+						<img src="__ROOT__/{$vo['adFile']}" height="360" width="100%" title="{$vo['adName']}" />
+				</a></li>
+				</volist>
+			</ul>
+			<div class="wst-slide-numbox">
+				<div class="wst-slide-controls">
+			  		<?php if($ishome == 1){ ?>
+			  		<volist name=":WSTAds(-1)" id="vo" key="k" >
+			  			<if condition="$k eq 1">
+			  		 		<span class="curr">{$k}</span>
+			  		  	<else/>
+			  		    	<span class="">{$k}</span>
+			  		 	</if>
+					</volist>
+					<?php } ?>
+				</div>
+			</div>
+		</div>
+	</div>
+	<div class='wst-clear'></div>
+	<div class="bigAd" style="width: 1210px;height:200px;margin:10px auto 5px;">
+		<img src="__ROOT__/Apps/Home/View/default/images/ad0.jpg"/>
+	</div>
+	
+	<div class="wst-container">
+		<!-------------F1层---------------->
+		<volist name="catList" key="k1" id="vo1">
+		<div class="wst-floor">
+			<div style="width:16%;float:left;"><img style="width:100%;" src="__ROOT__/Apps/Home/View/default/images/ad{$k1}.jpg"/></div>
+			<div class="wst-fl-right">
+				
+				<div class="wst-fl-nvg{$k1}">
+					<ul class="navtitle" style="overflow:hidden;">
+						<li>
+							<a
+						href="{:U('Home/Goods/getGoodsList/',array('c1Id'=>$vo1['catId']))}">
+						<span>{$vo1["catName"]}</span>
+					</a>
+						</li>
+						<li id="fl_{$k1}_0" class="wst-fl-tab"
+							onmouseover="gpanelOver(this);">精品推荐</li>
+						<volist name="vo1['catChildren']" key="k2" id="vo2">
+						<li id="fl_{$k1}_{$k2}" class="wst-fl-tab"
+							onmouseover="gpanelOver(this);">{$vo2["catName"]}</li>
+						</volist>
+					</ul>
+				</div>
+				<div style="overflow:hidden;">
+					<div id="fl_{$k1}_0_pl" class="wst-goods-container">
+						<volist name="vo1['jpgoods']" key="k2" id="vo2">
+						<li class="wst-goodsbox">
+							<div class="wst-goods-thumb">
+								<a
+									href="{:U('Home/Goods/getGoodsDetails/',array('goodsId'=>$vo2['goodsId']))}" class="aimg">
+									<img class='lazyImg' data-original="__ROOT__/{$vo2['goodsThums']}" width="180" />
+								</a>
+								
+									<div class="goodsname">
+										<a class="wst-goods-name"
+										href="{:U('Home/Goods/getGoodsDetails/',array('goodsId'=>$vo2['goodsId']))}">{$vo2['goodsName']}</a>
+									</div>
+									<div class="goodp">
+										<em class="wst-left wst-goods-price" id='shopGoodsPrice_{$vo2["goodsId"]}' dataId='{$vo2["goodsAttrId"]}'>￥{$vo2['shopPrice']|number_format=2}</em>
+									
+										<div class='wst-clear'></div>
+									</div>
+									<p class="goodcarts">
+										<a href="javascript:addCart({$vo2['goodsId']},0,'{$vo2['goodsThums']}')" class="wst-right <if condition="session('WST_USER.userId') gt 0 ">btnCart</if>"> 
+										<img src="__ROOT__/Apps/Home/View/default/images/btn_addcart.png" />
+										</a>
+										<div class='wst-clear'></div>
+									</p>
+								
+							</div>
+							
+						</li>
+						</volist>
+						<div class='wst-clear'></div>
+					</div>
+
+
+					<volist name="vo1['catChildren']" key="k2" id="vo2">
+					<div id="fl_{$k1}_{$k2}_pl" class="wst-goods-container"
+						style="display: none;">
+						<volist name="vo2['goods']" key="k3" id="vo3">
+						<li class="wst-goodsbox">
+							<div class="wst-goods-thumb">
+								<a
+									href="{:U('Home/Goods/getGoodsDetails/',array('goodsId'=>$vo3[goodsId]))}">
+									<img class='lazyImg' data-original="__ROOT__/{$vo3['goodsThums']}" width="180" />
+								</a>
+							
+								<div class="goodsname">
+									<a class="wst-goods-name"
+										href="{:U('Home/Goods/getGoodsDetails/',array('goodsId'=>$vo3[goodsId]))}">{$vo3['goodsName']}</a>
+								</div>
+								<div class="goodp">
+									<em class="wst-left wst-goods-price" id='shopGoodsPrice_{$vo3["goodsId"]}' dataId='{$vo3["goodsAttrId"]}'>￥{$vo3['shopPrice']|number_format=2}</em>
+								</div>
+								<p class="goodcarts">
+									<a href="javascript:addCart({$vo3['goodsId']},0,'{$vo3['goodsThums']}')" class="wst-right <if condition="session('WST_USER.userId') gt 0 ">btnCart</if>" > <img
+										src="__ROOT__/Apps/Home/View/default/images/btn_addcart.png"
+										 />
+									</a>
+									<div class='wst-clear'></div>
+								</p>
+								</div>
+						
+							
+						</li>
+						</volist>
+						<div class='wst-clear'></div>
+					</div>
+					</volist>
+					
+				</div>
+			</div>
+			<div class='wst-clear'></div>
+		</div>
+		</volist>
+		<ul class="logen w">
+			<li><img src="__ROOT__/Apps/Home/View/default/images/logen1.png" alt=""><p>食品安全有保障</p></li>
+			<li><img src="__ROOT__/Apps/Home/View/default/images/logen2.png" alt=""><p>有机农场想鲜蔬直供</p></li>
+			<li><img src="__ROOT__/Apps/Home/View/default/images/logen3.png" alt=""><p>国家级安全检测</p></li>
+			<li><img src="__ROOT__/Apps/Home/View/default/images/logen4.png" alt=""><p>自营冷链配送</p></li>
+			<li><img src="__ROOT__/Apps/Home/View/default/images/logen5.png" alt=""><p>支持多种购物卡</p></li>
+		</ul>
+	</div>
+	<include file="./Apps/Home/View/default/footer.html" />
+	<include file="./Apps/Home/View/default/right_cart.html" />
+	<script src="__PUBLIC__/js/common.js"></script>
+    <script src="__ROOT__/Apps/Home/View/default/js/index.js"></script>
+    <script src="__ROOT__/Apps/Home/View/default/js/common.js"></script>
+    <script src="__ROOT__/Apps/Home/View/default/js/global.js" type="text/javascript"></script>
+    <script src="__ROOT__/Apps/Home/View/default/js/head.js" type="text/javascript"></script>
+    <script src="__ROOT__/Apps/Home/View/default/js/goods.js" type="text/javascript"></script>
+</body>
+
+</html>
+

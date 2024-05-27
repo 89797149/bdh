@@ -1,0 +1,166 @@
+<?php
+
+namespace Adminapi\Model;
+
+/**
+ * ============================================================================
+ * NiaoCMS商城
+ * 官网地址:http://www.niaocms.com
+ * 联系QQ:1692136178
+ * ============================================================================
+ * 广告类
+ */
+class MobileAdModel extends BaseModel
+{
+    /**
+     * @return array
+     * 新增广告
+     */
+    public function insert()
+    {
+        $rd = array('code' => -1, 'msg' => '操作失败', 'data' => array());
+        $data = array();
+        $data["adTitle"] = I("adTitle");
+        $data["adImage"] = I("adImage");
+        $data["adTypeId"] = (int)I("adTypeId");
+        $data["adLocationId"] = (int)I("adLocationId");
+        $data["adDescribe"] = I("adDescribe");
+        $data["adSort"] = I("adSort", 0);
+        $data["createTime"] = date('Y-m-d H:i:s');
+        if ($this->checkEmpty($data, true)) {
+            $data["adFieldValue"] = I("adFieldValue");
+            $sql = "select * from __PREFIX__mobile_ad_type where  shopId = 0 and dataFlag = 1 and adTypeId = " . I('adTypeId');
+            $adTypeCount = $this->queryRow($sql);
+            if (empty($adTypeCount)) {
+                $rd['msg'] = '广告分类不存在';
+                return $rd;
+            }
+            $sqlAdl = "select * from __PREFIX__mobile_ad_location where shopId = 0 and adLocationId = " . I('adLocationId');
+            $adLocation = $this->queryRow($sqlAdl);
+            if (empty($adLocation)) {
+                $rd['msg'] = '广告位置不存在';
+                return $rd;
+            }
+            $sqLi = "select count(adLocationId) as adCount from __PREFIX__mobile_ad where shopId = 0 and dataFlag = 1 and adLocationId = " . I('adLocationId');
+            $adCount = $this->queryRow($sqLi);
+            if ($adCount['adCount'] == $adLocation['restrictCount']) {
+                $rd['msg'] = '超出广告条数限制';
+                return $rd;
+            }
+            $rs = $this->add($data);
+            if (false !== $rs) {
+                $rd['code'] = 0;
+                $rd['msg'] = '操作成功';
+            }
+        }
+        return $rd;
+    }
+
+    /**
+     * @return array
+     * 编辑广告信息
+     */
+    public function edit()
+    {
+        $rd = array('code' => -1, 'msg' => '操作失败', 'data' => array());
+        $data["adId"] = (int)I("adId", 0);
+        if ($this->checkEmpty($data, true)) {
+            $data["adTitle"] = I("adTitle");
+            $data["adImage"] = I("adImage");
+            $data["adTypeId"] = (int)I("adTypeId");
+            $data["adLocationId"] = (int)I("adLocationId");
+            $data["adDescribe"] = I("adDescribe");
+            $data["adFieldValue"] = I("adFieldValue");
+            $data["adSort"] = I("adSort", 0);
+            $sql = "select * from __PREFIX__mobile_ad_type where shopId = 0 and dataFlag = 1 and adTypeId = " . I('adTypeId');
+            $adType = $this->queryRow($sql);
+            if (empty($adType)) {
+                $rd['msg'] = '广告分类不存在';
+                return $rd;
+            }
+            $sqlAdl = "select * from __PREFIX__mobile_ad_location where shopId = 0 and adLocationId = " . I('adLocationId');
+            $adLocation = $this->queryRow($sqlAdl);
+            if (empty($adLocation)) {
+                $rd['msg'] = '广告位置不存在';
+                return $rd;
+            }
+            $sqLi = "select count(adLocationId) as adCount from __PREFIX__mobile_ad where shopId = 0 and dataFlag = 1 and adLocationId = " . I('adLocationId');
+            $adCount = $this->queryRow($sqLi);
+            $adInfo = $this->where(" shopId = 0 and dataFlag = 1 and adLocationId=" . I('adLocationId'))->field('adId')->select();
+            $adId = [];
+            foreach ($adInfo as $v) {
+                $adId[] = $v['adId'];
+            }
+            if (!in_array($data['adId'], $adId)) {
+                if ($adCount['adCount'] == $adLocation['restrictCount']) {
+                    $rd['msg'] = '超出广告条数限制';
+                    return $rd;
+                }
+            }
+            $rs = $this->where("adId=" . $data["adId"])->save($data);
+            if (false !== $rs) {
+                $rd['code'] = 0;
+                $rd['msg'] = '操作成功';
+            }
+        }
+        return $rd;
+    }
+
+    /**
+     * @return array
+     * 删除广告信息
+     */
+    public function del()
+    {
+        $rd = array('code' => -1, 'msg' => '操作失败', 'data' => array());
+        $data['dataFlag'] = -1;
+        $rs = $this->where('shopId = 0 and adId = ' . (int)I('adId'))->save($data);
+        if (false !== $rs) {
+            $rd['code'] = 0;
+            $rd['msg'] = '操作成功';
+        }
+        return $rd;
+    }
+
+    /**
+     * @param int $page
+     * @param int $pageSize
+     * @return array
+     * 广告列表分页
+     */
+    public function getAdList($page = 1, $pageSize = 15)
+    {
+        $adTitle = WSTAddslashes(I("adTitle"));
+        $startTime = WSTAddslashes(I("startTime"));
+        $endTime = WSTAddslashes(I("endTime"));
+        $adTypeId = (int)I("adTypeId");
+        $adLocationId = (int)I("adLocationId");
+        $sql = "select ma.*,mat.typeDescribe,mal.locationDescribe from __PREFIX__mobile_ad ma left join __PREFIX__mobile_ad_type mat on mat.adTypeId = ma.adTypeId left join __PREFIX__mobile_ad_location mal on mal.adLocationId = ma.adLocationId ";
+        $sql .= " where ma.dataFlag = 1 and ma.shopId = 0 and mat.shopId = 0 and mal.shopId = 0";
+        if ($adTypeId > 0) {
+            $sql .= " and mat.dataFlag = 1 and mat.adTypeId = $adTypeId";
+        }
+        if ($adLocationId > 0) {
+            $sql .= " and mal.adLocationId = $adLocationId";
+        }
+        if ($adTitle != "") {
+            $sql .= " and ma.adTitle like '%" . $adTitle . "%'";
+        }
+        if ($startTime != "") {
+            $sql .= " and ma.createTime >= '$startTime'";
+        }
+        if ($endTime != "") {
+            $sql .= " and ma.createTime <= '$endTime'";
+        }
+        $sql .= " order by ma.adSort desc ";
+        return $this->pageQuery($sql, $page, $pageSize);
+    }
+
+    /**
+     * 获取指定对象
+     */
+    public function getAdDetail($adId)
+    {
+        return $this->where("shopId = 0 and dataFlag = 1 and adId='" . $adId . "'")->find();
+    }
+}

@@ -1,0 +1,328 @@
+<!DOCTYPE html>
+<html lang="zh-cn">
+	<head>
+  		<meta charset="utf-8">
+      	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+      	<link rel="shortcut icon" href="favicon.ico"/>
+      	<title>卖家登录 - {$CONF['mallTitle']}</title>
+      	<meta name="keywords" content="{$CONF['mallKeywords']}" />
+      	<meta name="description" content="{$CONF['mallDesc']},卖家登录" />
+     	<link rel="stylesheet" href="__ROOT__/Apps/Home/View/default/css/common.css">
+     	<link rel="stylesheet" href="__ROOT__/Apps/Home/View/default/css/head.css" />
+     	<link rel="stylesheet" href="__ROOT__/Apps/Home/View/default/css/login.css">
+		<link rel="stylesheet" href="//at.alicdn.com/t/font_490692_yxdat2sn3kp.css" />
+		<style>
+		
+		@font-face {
+  font-family: 'iconfont';  /* project id 490692 */
+  src: url('//at.alicdn.com/t/font_490692_yxdat2sn3kp.eot');
+  src: url('//at.alicdn.com/t/font_490692_yxdat2sn3kp.eot?#iefix') format('embedded-opentype'),
+  url('//at.alicdn.com/t/font_490692_yxdat2sn3kp.woff') format('woff'),
+  url('//at.alicdn.com/t/font_490692_yxdat2sn3kp.ttf') format('truetype'),
+  url('//at.alicdn.com/t/font_490692_yxdat2sn3kp.svg#iconfont') format('svg');
+}
+		.wst-login {
+    width: 100%;
+    height: 100%;
+	background-color: #2d3a4b;
+	
+}
+
+#entry{
+    padding: 0;
+	background: transparent;
+	width:24%;
+	height:100%;
+	margin-top: 0;
+}
+#entry .mc{
+	border:0;
+	background: transparent;
+	height: 100%;
+}
+#entry .form {
+    position: absolute;
+    top: 50%;
+    right: auto;
+    left: 50%;
+    width:100%;
+    overflow: hidden;
+    transform: translate(-50%,-50%);
+	-webkit-transform: translate(-50%,-50%);
+
+}
+.shopLogin{
+	font-size: 26px;
+    color: #eee;
+    margin: 0px auto 40px auto;
+    text-align: center;
+    font-weight: bold;
+	margin-top: 27%;
+}
+#entry .item .item-ifo{
+    display: inline-block;
+    width:100%;
+	position:relative;
+}
+#entry .item .item-ifo i{
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    color: #889aa4;
+	left:15px;
+}
+#entry .form{
+width: 100%;
+height: 100%;
+}
+#entry .item{
+	width:100%;
+	margin-bottom: 30px;
+}
+div input:-webkit-autofill, textarea:-webkit-autofill, select:-webkit-autofill {
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    background-color: rgb(38,52,69);
+    border-radius: 3px;
+    color: #eee;
+	-webkit-box-shadow: 0 0 0 1000px rgb(38,52,69) inset;
+	box-shadow: 0 0 0 1000px rgb(38,52,69) inset;
+	-webkit-text-fill-color: #eee;
+	text-fill-color: #eee;
+}
+#entry .item span {
+    color: #eee;
+	}
+#verify{background-color:rgb(38,52,69);
+    border-radius: 5px;}
+#entry .text{
+	padding-left: 9%;
+    height: 40px;
+	border: 1px solid #394656;
+    width: 86%;
+    background-color: rgb(38,52,69);
+	}
+html,body{
+	    height: 100%;
+	}
+.mar,.mar a:link, a:visited,a:hover{
+	color: #eee;
+	}
+	#entry .btn-entrys {
+    background: initial;
+    background-color: #409EFF;
+    color: #eee;
+    border-radius: 4px;
+}
+#entry .btn-entrys:hover{
+    background: initial;
+    background-color: #409EFF;
+}
+#entry .item span#loginsubmit{
+	height: 38px;
+	margin: 0 auto;
+	    text-indent: initial;
+		    line-height: 38px;
+			font-size: 14px;
+}
+.form .item-ifos label{
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+	-webkit-transform: translateY(-50%);
+}
+#entry .checkbox {
+    margin-top: 6px;
+}
+		</style>
+   	</head>
+   	<body>
+		<div style="display:none;">
+   		<include file="./Apps/Home/View/default/header_common.html" />
+		</div>
+   		<div class='wst-login'>
+		    <div class=" w1" id="entry">       
+		        <div class="mc " id="bgDiv" style="position:relative;">
+		            <div class="form">
+					
+						<div class="shopLogin">
+							<p style="font-size: 26px;">Shop Login</p>
+							<p style="font-weight: normal;margin-top: 15px;">卖家中心</p>
+						</div>
+		                <div class="item fore1" style="position:relative;">
+		                    <span>用户名/手机号/邮箱</span><span id="errmsgs" style="color:red;position:absolute;top:0px;left:100px;"></span>
+		                    <div class="item-ifo">
+								<i class="iconfont iconfx icon-denglu1"></i>
+		                        <input id="loginNames" name="loginName" class="text"  tabindex="1" value="{$loginName?$loginName:$shopLogin['loginName']}" autocomplete="off" type="text"/>
+		                    </div>
+		                </div>               
+		                <div class="item fore2">
+		                    <span>密码</span>
+		                    <div class="item-ifo"> 
+								<i class="iconfont iconfx icon-denglu"></i>
+							
+		                        <input id="loginPwds" name="loginPwd" value="{$loginPwd?$loginPwd:$shopLogin['passWord']}" class="text" tabindex="2" autocomplete="off" type="password"/>                      
+		                                            
+		                    </div>
+		                </div>
+		               
+		                <div class="item fore3 " id="o-authcode">
+		                    <span>验证码</span>
+		                    <div class="item-ifo item-ifos">
+		                        <input id="verifys" style="ime-mode:disabled;width: 20%;padding-left:2%;color: #fff;" name="verify" class="text text-1" tabindex="6" autocomplete="off" maxlength="6" type="text"/>
+			                    <label class="img" style="left:30%;">
+			                		<img style='vertical-align:middle;cursor:pointer;height:45px;border-radius: 4px;' class='verifyImg' src='__ROOT__/Apps/Home/View/default/images/clickForVerify.png' title='刷新验证码' onclick='javascript:getVerify()'/> 
+								</label>      	
+			              		<label class="ftx23" style="left: 65%;">&nbsp;看不清？<a href="javascript:getVerify()" class="flk13" style="color:#409eff;">换一张</a></label>
+		                    </div>
+		                </div>
+		               
+		                <div class="item fore4" id="autoentry">
+		                    <div class="item-ifo">
+		                        <input class="checkbox" id="rememberPwds" name="rememberPwd" checked="checked" type="checkbox"/>
+		                        <label class="mar">记住密码</label>                                          
+		                        <label class="mar"><a href="{:U('Users/forgetPass')}">忘记密码?</a></label>
+		                        <label><a href="javascript:regist();" style="color:#eee;">免费开店</a></label>
+		                        <div class="clr"></div>
+		                    </div>
+		            	</div>
+		                <div class="item login-btn2013">
+							<span class="btn-img btn-entrys" style="background: initial;background-color: #409EFF;color: #eee;border-radius: 4px;" id="loginsubmit" value="login" tabindex="8" onclick="javascript:login();">Log in</span>
+		                </div>
+		            </div>
+		        </div>
+		    </div>
+		</div>
+   	</body>
+	<script src="__PUBLIC__/js/jquery.min.js"></script>
+   	<script src="__PUBLIC__/js/common.js"></script>
+    <script src="__ROOT__/Apps/Home/View/default/js/common.js"></script>
+	<script src="__ROOT__/Public/js/think.js"></script>
+	
+	<script src="__ROOT__/Apps/Home/View/default/js/vue.js" type="text/javascript" charset="utf-8"></script>
+    <script src="__ROOT__/Apps/Home/View/default/js/vue-resource.js" type="text/javascript" charset="utf-8"></script>
+    <script src="__ROOT__/Apps/Home/View/default/js/require.js" type="text/javascript" charset="utf-8"></script>
+    <script src="__ROOT__/Apps/Home/View/default/js/SQLite.js" type="text/javascript" charset="utf-8"></script>
+	
+   	<script>
+	$(function(){
+	console.log("打印登录0001")
+			if(typeof(isClient)!=='undefined'){
+			//M('shopLogin').insert({'passWord':$.trim($('#loginPwd').val()),'loginName':'"'+$.trim($('#loginName').val())+'"'},t=>{
+
+				//if(t){
+				//	console.log('数据添加成功'+t)
+					
+				//}else{
+				//	console.log('抽象层数据添加失败'+t)
+				//}
+			//});
+			
+			M('shopLogin').where('id="1"').field('passWord,loginName').find().then(
+				t=>{
+						console.log("抽象层获取单个数据1111111:")
+
+						console.log(t)
+						$("#loginNames").val(t.loginName);
+						$("#loginPwds").val(t.passWord)
+					}
+				);
+			}
+	
+	getVerify();
+	$('#chkRememberMe').change(function(){
+		if($('#chkRememberMe:checked').val()){
+			$("#rememberPwds").val(1);
+		}else{
+			$("#rememberPwds").val(0);
+		}
+	});
+	$(document).keypress(function(e) { 
+		   if(e.which == 13) {  
+			   login();  
+		   } 
+	});
+})
+function login(){
+
+
+	   var params = {};
+	   params.loginName = $.trim($('#loginNames').val());
+	   params.loginPwd = $.trim($('#loginPwds').val());
+	   params.verify = $.trim($('#verifys').val());
+	   var rememberPwd = $("#rememberPwds").val();
+	   if(params.loginName==''){
+		   $("#errmsgs").html("&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;请输入用户名!");
+		   $('#loginNames').focus();
+		   return;
+	   }
+	   if(params.loginPwd==''){
+		   $("#errmsgs").html("&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;请输入密码!");
+		   $('#loginPwds').focus();
+		   return;
+	   }
+	   if(params.verify==""){
+			$("#errmsgs").html("&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;验证码不能为空");
+			return false;
+	   }
+	   $.post(Think.U('Home/Shops/checkLogin'),params,function(data,textStatus){
+			var json = WST.toJson(data);
+			
+			console.log(json)
+			if(json.status=='1'){
+				location.href= Think.U('Home/Shops/index');
+
+				if(typeof(isClient)!=='undefined'){
+				//M('shopLogin').insert({'passWord':$.trim($('#loginPwd').val()),'loginName':'"'+$.trim($('#loginName').val())+'"'},t=>{
+
+					//if(t){
+					//	console.log('数据添加成功'+t)
+						
+					//}else{
+					//	console.log('抽象层数据添加失败'+t)
+					//}
+				//});
+				
+				M('shopLogin').where('id="1"').update({
+					'passWord':'"'+$.trim($('#loginPwds').val())+'"',
+					'loginName':'"'+$.trim($('#loginNames').val())+'"'
+					}).then(t=>{
+					if(t){
+						console.log('更新成功')
+
+					}else{
+						console.log('抽象层数据更新失败')
+					}
+
+				});
+				
+				M('shopLogin').where('id="1"').field('passWord,loginName').find().then(
+				t=>{
+						console.log("抽象层获取单个数据:")
+
+						console.log(t)
+						$("#loginNames").val(t.loginName);
+						$("#loginPwds").val(t.passWord)
+					}
+				);
+				
+			}else{
+				
+				
+			}
+				
+
+				
+
+			}else if(json.status==-2){
+				$("#errmsgs").html("&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;验证码错误");
+				getVerify();
+			}else{
+				$("#errmsgs").html("&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;账号或密码错误!");
+				getVerify();
+			}
+	   });
+}
+	</script>
+	
+	
+</html> 

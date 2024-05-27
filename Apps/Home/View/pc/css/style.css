@@ -1,0 +1,268 @@
+/********************* 网站通用样式 *********************/
+
+* {
+    margin: 0;
+    padding: 0;
+}
+
+body {
+    font: 16px/1.14 "Microsoft YaHei", "宋体", Simsun, Tahoma, Helvetica, Arial, sans-serif;
+    color: #5A5959;
+    background-color: #fff;
+    line-height: 1.5;
+}
+
+.float,
+.floatL {
+    float: left;
+}
+.floarL {
+
+    display: inline-block;
+    position:absolute;
+    left: 80px;
+    top: 50%;
+    transform: translateY(-50%);
+    -webkit-transform: translateY(-50%);
+    width: 200px;
+}
+.floarL img{
+    width: 90px;
+}
+.floatR {
+    float: right;
+}
+
+.clear {
+    clear: both;
+}
+
+h2 {
+    font-size: 26px;
+    font-weight: normal;
+}
+
+p {
+    line-height: 1.8;
+}
+
+img {
+    border: 0;
+}
+
+ul li {
+    list-style: none;
+}
+
+a {
+    text-decoration: none;
+    color: #5A5959;
+}
+
+a:link {}
+
+a:visited {}
+
+a:hover {
+    color: #121313;
+}
+
+.gray {
+    color: #999999;
+}
+
+/********************* 页面结构布局 *********************/
+#page {}
+
+#header {
+    height: 80px;
+    margin: auto;
+}
+
+#content {
+    position: relative;
+    background-color: #f6f6f6;
+}
+
+#main {
+    margin: auto;
+}
+
+#footer {
+    margin: auto;
+    padding: 15px 10px;
+}
+
+.container,
+#header,
+#main {
+    width: 1000px;
+    margin-right: auto;
+    margin-left: auto;
+}
+.container{
+    position: relative;
+}
+
+/****************** 页面元素显示 header ************************/
+#header .logo {
+    margin-left: 0px;
+    margin-top: 13px;
+    background-size: 100% 100%;
+    /*background: url('../images/logo.png') no-repeat;*/
+}
+
+#header .logo a {
+    display: block;
+    width: 176px;
+    height: 60px;
+}
+
+#header .nav {
+    display: block;
+    margin-top: 29px;
+}
+
+#header .nav ul {}
+
+#header .nav ul li {
+    float: left;
+    background: url('../images/fg.png') no-repeat left center;
+    padding: 0px 38px;
+    height: 22px;
+    line-height: 22px;
+    vertical-align: center;
+}
+
+#header .nav ul li.first {
+    background-image: none;
+}
+
+#header .nav ul li.last {
+    padding-right: 0px;
+}
+
+#header .nav ul li a:link {
+    font-size: 16px;
+    text-decoration: none;
+    color: #333333;
+}
+
+#header .nav ul li.active a {
+    color: #141515;
+}
+
+/****************** 页面元素显示 footer ************************/
+#footer {
+    text-align: center;
+    background: #006e43;
+    color: #fff;
+    font-size: 13px;
+}
+
+#footer a {
+    color: #fff;
+}
+
+#footer a:hover {
+    text-decoration: underline;
+}
+
+#footer .link {
+    text-align: center;
+}
+
+#footer .link span {
+    margin: 0 3px;
+}
+
+#footer .copyright {
+    margin-top: 10px;
+}
+
+/****************** 页面元素显示 content ************************/
+
+#content .wave {
+    height: 9px;
+    width: 100%;
+    position: absolute;
+    background: url('../images/wave.png') repeat-x top;
+    z-index: 999;
+    top: 0px;
+}
+
+
+.kuang {
+    margin: auto;
+    padding: 40px 50px 50px;
+    background-color: #fff;
+}
+
+.list_date {
+    float: right;
+    color: #999999;
+}
+
+/****************** 页面元素 回顶部css代码 ************************/
+div.go-top {
+    display: none;
+    opacity: 0.6;
+    z-index: 999999;
+    position: fixed;
+    bottom: 164px;
+    left: 90%;
+    margin-left: 40px;
+    border: 1px solid #eee;
+    width: 38px;
+    height: 38px;
+    background-color: #ccc;
+    border-radius: 3px;
+    cursor: pointer;
+}
+
+div.go-top:hover {
+    background-color: #03a9f4;
+}
+
+div.go-top div.arrow {
+    position: absolute;
+    left: 10px;
+    top: -1px;
+    width: 0;
+    height: 0;
+    border: 9px solid transparent;
+    border-bottom-color: #eee;
+}
+
+div.go-top div.stick {
+    position: absolute;
+    left: 15px;
+    top: 15px;
+    width: 8px;
+    height: 14px;
+    display: block;
+    background-color: #eee;
+    -webkit-border-radius: 1px;
+    -moz-border-radius: 1px;
+    border-radius: 1px;
+}
+
+
+.visible-xs,
+.visible-sm,
+.visible-md,
+.visible-lg {
+    display: none !important;
+}
+.goodsul{
+    overflow: hidden;
+    margin: 0 auto;
+    width: 100%;
+}
+.goodsul li{
+    float:left;
+    width: 33%;
+}
+.goodsul li img{
+    width: 80%;
+}

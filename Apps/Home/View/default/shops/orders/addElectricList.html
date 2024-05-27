@@ -1,0 +1,75 @@
+<extend name="./Apps/Home/View/default/shops/layout.html" />
+<block name="content">
+
+<style>
+.wst-tab-nav {
+    margin: 0;
+    padding: 0;
+    height: 60px;
+    width: 98%;
+    padding-right: 12px;
+
+}
+.wst-tab-nav li{
+	background: #fff;
+	margin-right: 4px;
+    border-top-left-radius: 3px;
+    border-top-right-radius: 3px;
+	line-height: 35px;
+	margin-top: 5px;
+	border:0;
+	font-size: 16px;
+	    padding: 3px 14px;
+}
+</style>
+	<script>
+	
+
+	</script>
+	<div class="wst-body" style="margin-bottom: 8px;">
+		<div class='lodopLoadDiv'></div>	
+		<div class='wst-page-header'>卖家中心 > 订单管理</div>
+		<div class='wst-page-content'>
+		<div class="exeBox2"></div>
+			<div class="exeBox"></div>
+		   <div id='tab' class="wst-tab-box" style="margin-top: 50px;">
+			<div class="wst-tab-content" style='width:98%;padding-top: 18px;'> 
+
+				<!-- 取消/拒收 -->
+				<div class='wst-tab-item' style="display:none;">
+					<div>
+						<table class='wst-list listHeaderInput' style="font-size:13px;">
+							<thead>
+								<tr>
+									<th width='100'>ip</th>
+									<th width='100'>端口</th>
+									<th width='*'>备注</th>
+								</tr>
+							</thead>
+							<tbody id="otbody5">
+							<tr>
+								<td><input type='text' class='electricIpName'/></td>
+								<td><input type='text' class='electricPortName'/></td>
+								<td><input type='text' class='electricRemarkName'/></td>
+
+							</tr>
+							</tbody>
+							<tfoot>
+								<tr>
+								 <td colspan='2' style='padding: 38px 0;text-align: center;'>
+									 <button type="submit" class='wst-btn-query' onclick="saveElectricSet(0,0)" style='margin-top:5px;background-color: #6aac38;margin-left: -53px;color:#fff;'>保&nbsp;存</button>&nbsp;&nbsp;
+									 <button type="button" class='wst-btn-query' onclick='javascript:location.reload();' style='margin-top:5px;margin-left:26px;background-color: #867d78;color:#fff;'>重&nbsp;置</button>
+									
+								 </td>
+								</tr>
+							 </tfoot>
+						</table>
+					</div>
+					<div style='clear:both;'></div>
+				</div>
+			</div>
+			</div>
+		</div>
+		<div style='clear:both;'></div>
+	</div>
+</block>  

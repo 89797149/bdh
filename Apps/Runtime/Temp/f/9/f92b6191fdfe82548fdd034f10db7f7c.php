@@ -1,0 +1,3 @@
+<?php
+//000031536000a:2:{i:0;a:3:{s:5:"catId";s:3:"543";s:7:"catName";s:13:"同步分类1";s:11:"catChildren";a:1:{i:0;a:3:{s:5:"catId";s:3:"544";s:7:"catName";s:13:"同步分类2";s:11:"catChildren";a:1:{i:0;a:2:{s:5:"catId";s:3:"545";s:7:"catName";s:3:"123";}}}}}i:1;a:3:{s:5:"catId";s:3:"511";s:7:"catName";s:12:"办公用品";s:11:"catChildren";a:2:{i:0;a:3:{s:5:"catId";s:3:"528";s:7:"catName";s:15:"办公用品品";s:11:"catChildren";a:1:{i:0;a:2:{s:5:"catId";s:3:"529";s:7:"catName";s:9:"纸张类";}}}i:1;a:3:{s:5:"catId";s:3:"512";s:7:"catName";s:12:"办公用品";s:11:"catChildren";a:2:{i:0;a:2:{s:5:"catId";s:3:"513";s:7:"catName";s:6:"文具";}i:1;a:2:{s:5:"catId";s:3:"514";s:7:"catName";s:6:"纸类";}}}}}}
+?>

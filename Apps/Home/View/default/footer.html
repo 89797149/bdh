@@ -1,0 +1,71 @@
+
+	<div class="wst-footer" >
+		<div class="wst-footer-cld-box">
+			<div class="wst-footer-fl">友情链接：</div>
+			<div style="padding-left:30px;">
+				<volist name="friendLikds" key="k" id="vo">
+				<div style="float:left;"><a href="{$vo["friendlinkUrl"]}" target="_blank">{$vo["friendlinkName"]}</a>&nbsp;&nbsp;</div> 
+				</volist>
+				<div class="wst-clear"></div>
+			</div>
+		</div>
+	</div>
+
+ <div class="foot">
+		<ul class="footCont w">
+				<volist name="helps" key="k1" id="vo1" offset="1" length='4'>
+			<div class="wst-footer-wz-ca" style="width:160px;">
+				<div class="wst-footer-wz-pt">
+				    <img src="__ROOT__/Apps/Home/View/default/images/a{$k1}.jpg" height="18" width="18"/>
+					<span class="wst-footer-wz-pn">{$vo1["catName"]}</span>
+					<div style='margin-left:30px;'>
+						<volist name="vo1['articlecats']" key="k2" id="vo2">
+						<a href="{:U('Home/Articles/index/',array('articleId'=>$vo2['articleId']))}">{$vo2['articleTitle']}</a><br/>
+						</volist>
+					</div>
+				</div>
+			</div>
+			</volist>
+
+			<li class="code" style="width:25%;">
+				<div style="width:100%;overflow:hidden;">
+					<span>客户端下载</span>
+					<div style="width:100%;overflow:hidden;margin-top: 14px;">
+					<span style="width:50%;display:inline-block;float:left;">
+						<img src="__ROOT__/Apps/Home/View/default/images/weixin.png" alt="">
+						<a href="" class="ios"><img src="__ROOT__/Apps/Home/View/default/images/1.png" alt=""></a>					
+					</span>
+					<span style="width:50%;display:inline-block;float:left;">
+						<img src="__ROOT__/Apps/Home/View/default/images/weixin.png" alt="">
+				<a href="" class="android"><img src="__ROOT__/Apps/Home/View/default/images/2.png" alt=""></a>					
+					</span>					
+					</div>
+
+
+				</div>
+				
+			</li>
+			<li class="code">
+				
+				<!-- <a href=""><i class="fweibo"></i>新浪微博</a> -->
+				<div>
+					<span>关注公众号</span>
+				<img src="__ROOT__/Apps/Home/View/default/images/weixin2.png" alt=""/ style="margin-top: 14px;">
+				</div>
+			</li>
+		</ul>
+		<div style="margin:;">
+		
+			<a href="#" style="color:rgb(81, 152, 15);">本站联系电话:</a>
+						<if condition="$CONF['phoneNo'] neq ''">
+						<span class="wst-footer-pno">{$CONF['phoneNo']}</span><br/>
+						</if>
+						<if condition="$CONF['qqNo'] neq ''">
+						<a href="tencent://message/?uin={$CONF['qqNo']}&Site=QQ交谈&Menu=yes">
+						<img border="0" src="http://wpa.qq.com/pa?p=1:{$CONF['qqNo']}:7" alt="QQ交谈" width="71" height="24" />
+						</a><br/>
+						</if>
+		</div>
+		<p>Copyright@2016 Powered By <a target="_blank" href="http://www.niaocms.com">小鸟cms官网</a> </p>
+		<!-- <img src="__ROOT__/Apps/Home/View/default/images/quanwei.png" alt=""> -->
+	</div>

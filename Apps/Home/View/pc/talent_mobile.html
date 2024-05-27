@@ -1,0 +1,666 @@
+<!doctype html>
+<html>
+
+<head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="Chrome=1,IE=edge" />
+    <meta name="baidu-site-verification" content="fchvDjhZJD" />
+    <script src="__ROOT__/Apps/Home/View/pc/royalslider/jquery-1.8.3.min.js"></script>
+    <script src="__ROOT__/Apps/Home/View/pc/royalslider/jquery.royalslider.min.js?v=9.3.6"></script>
+    <title>买立得商家网入驻意向单</title>
+    <meta name="keywords" content="加入我们">
+    <meta name="description"
+        content="买立得商家网采用线上线下结合,附近商家供货,售后的模式,打造一个线上线下结合的新零售模式，公司网点覆盖整个常州地区,全城按需配送“当日达”,产品覆盖电脑,手机数码,办公设备,电脑配件,办公文具,劳保用品,租赁维修,上门服务等.">
+    <meta name="apple-touch-fullscreen" content="YES" />
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="format-detection" content="telephone=no" />
+
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+    <!--<meta name="viewport" content="width=device-width, initial-scale=1">-->
+    <meta name="apple-touch-fullscreen" content="YES" />
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="format-detection" content="telephone=no" />
+    <link type="image/x-icon" rel="shortcut icon" href="/<?php echo $config['mallLogo'];?>" />
+    <link rel="stylesheet" href="__ROOT__/Apps/Home/View/pc/css/style.css" data-version="@VERSION@">
+    <!-- <link rel="stylesheet" href="__ROOT__/Apps/Home/View/pc/css/aboutus.css"> -->
+    <link rel="stylesheet" href="__ROOT__/Apps/Home/View/pc/js/layui/css/layui.css">
+
+
+</head>
+
+
+<style>
+    /* ***************************************************************** */
+    /* 320----767px 分辨率 */
+
+    .loading-skeleton {
+        margin: 10px auto;
+        padding: 50px 0;
+        background-color: #fff;
+        border-radius: 6px;
+    }
+
+    .isProhibitStatusOk {
+        margin-left: 14%;
+    }
+
+    .lineBg {
+        height: 100px;
+        width: 100%;
+        background-color: #f5f5f5;
+    }
+
+    .layui-form-item {
+        margin-bottom: 35px !important;
+    }
+
+    .layui-form-item .layui-input-inline {
+        width: 60% !important;
+    }
+
+    .layui-input-block {
+        width: 60%;
+    }
+
+    .identification {
+        color: tomato;
+        font-size: 20px;
+    }
+
+    .shopTitle {
+        font-size: 20px;
+        font-weight: normal;
+        color: rgb(34, 34, 34);
+        padding: 0 20px 80px;
+    }
+
+    .shopTwoTitle {
+        color: #666;
+        max-width: 100%;
+        overflow: auto;
+        margin-bottom: .07rem;
+        font-size: 12px;
+    }
+
+    .businessUploadImgNone {
+        display: none;
+        width: 100px;
+        height: auto;
+    }
+
+    .certificateUploadImgNone {
+        display: none;
+        width: 100px;
+        height: auto;
+    }
+
+    /* header Start */
+
+    #footer {
+        position: absolute;
+        left: 0;
+        right: 0;
+        /*bottom: 0;*/
+    }
+
+    @media only screen and (max-width: 767px) and (min-width: 500px) {
+        .ipone_nav_icon {
+            width: 8%;
+            margin-top: 10px !important;
+            margin-right: 10px;
+            float: right;
+        }
+    }
+
+
+
+    @media only screen and (min-width: 320px) and (max-width: 767px) {
+
+        .container,
+        #header,
+        #main {
+            width: 95% !important;
+            font-size: 20px;
+        }
+
+        #header .logo {
+            background-size: 80% !important;
+            margin-top: 19px;
+            position: fixed;
+            top: 0;
+            z-index: 2;
+        }
+
+
+        .ipone_nav_icon_box {
+            display: block;
+            position: fixed;
+            top: 0;
+            z-index: 1;
+            width: 100%;
+            left: 0;
+            background: #fff;
+            height: 75px;
+        }
+
+        /* header Start */
+        #header .nav {
+            display: none !important;
+        }
+
+        .ipone_navList {
+            display: none;
+        }
+
+        .aboutus {
+            text-align: left !important;
+        }
+
+        /* 320-767 显示导航 */
+
+        .mark {
+            background: rgba(0, 0, 0, 0.3) !important;
+            position: fixed;
+            width: 100%;
+            height: 100%;
+            left: 0;
+            right: 0;
+            z-index: 40;
+            bottom: 0;
+            top: 75px;
+        }
+
+        .ipone_navList_info {
+            /* transition: all .3s linear; */
+            font-size: 15px;
+            display: none;
+            position: fixed;
+            top: 90px;
+            right: 6px;
+            z-index: 41;
+            height: auto;
+            padding: 0 25px;
+            background: #fff;
+            border-radius: 4px;
+        }
+
+        .ipone_nav_icon {
+            width: 8%;
+            margin-top: 25px;
+            margin-right: 10px;
+            float: right;
+        }
+
+
+        .ipone_navList_info ul li {
+            padding: 10px 0;
+            /* display: none; */
+        }
+
+        .triangle {
+            position: fixed;
+            top: 82px;
+            z-index: 41;
+            background: #fff;
+            width: 15px;
+            height: 15px;
+            right: 26px;
+            filter: progid:DXImageTransform.Microsoft.BasicImage(rotation=3);
+            -moz-transform: rotate(135deg);
+            -o-transform: rotate(135deg);
+            -webkit-transform: rotate(135deg);
+            transform: rotate(135deg)
+        }
+
+        .ipone_navList_info_icon_ul {
+            margin: 0;
+        }
+
+        .ipone_navList_info_icon {
+            width: 20px;
+            height: auto;
+            display: block;
+            float: left;
+            padding: 0 10px;
+        }
+
+        /* header END */
+
+        .heroSlider .rsOverflow,
+        .royalSlider.heroSlider {
+            height: 520px !important;
+        }
+
+        .server img {
+            display: block;
+            width: 97%;
+            height: auto;
+            margin: 0 auto;
+        }
+
+        .news .clear {
+            width: 70% !important;
+            margin: 0 0 12px 33px;
+        }
+
+        .all-news {
+            margin-left: 33px;
+        }
+
+        .news h2 img {
+            width: 45%;
+            height: auto;
+            margin: 0 0 0 10px;
+        }
+
+        .lineBg {
+            height: 20px;
+        }
+
+        .shopTitle {
+            padding: 0 20px 30px;
+        }
+
+        .layui-form {
+            font-size: 15px;
+        }
+
+        .layui-form-label {
+            float: none;
+            display: inline-block;
+            text-align: left;
+            width: 100px;
+        }
+
+        .businessUploadImg {
+            margin: 30px 20px;
+        }
+
+        .certificateUploadImg {
+            margin: 30px 20px;
+        }
+
+        .layui-input-block {
+            width: 85%;
+        }
+
+        .layui-input-block {
+            margin-left: 25px;
+
+        }
+
+        .layui-form-item .layui-input-inline {
+            width: 85% !important;
+        }
+
+        .layui-form-item .layui-input-inline {
+            margin: 0 0 10px 30px;
+        }
+
+        .businessUploadImgNone {
+            padding-bottom: 15px;
+        }
+
+        .certificateUploadImgNone {
+            padding-bottom: 15px;
+        }
+
+
+        .isProhibitStatusOk {
+            margin-left: 7%;
+        }
+
+
+    }
+
+
+
+    @media screen and (min-width:768px) and (max-width:999999px) {
+
+        #header .nav {
+            display: block !important;
+        }
+
+        #header .ipone_nav {
+            display: none;
+        }
+
+        .ipone_nav_icon_box {
+            display: none;
+        }
+
+        .ipone_navList_info {
+            display: none;
+        }
+    }
+</style>
+
+<body onload="opener.location.reload()" style="background-color:#f6f6f6">
+    <div id="page">
+        <!--<div id="header" class="container">
+            <div class="logo float" style="background-image: url(/<?php echo $config['mallLogo'];?>)">
+                <a href="/"> </a>
+            </div>
+
+            <div class="ipone_nav_icon_box">
+                &lt;!&ndash; 菜单图标 &ndash;&gt;
+                <img class="ipone_nav_icon" src="/Apps/Home/View/pc/images/nav_icon.png" alt="">
+            </div>
+
+
+            <div class="nav floatR">
+                <ul>
+                    <li class="first"><a href="/">首页</a></li>
+                    <li class=" "><a href="{:U('index/aboutus')}">关于我们</a></li>
+                    <li class=""><a href="{:U('index/ourwork')}">快乐工作</a></li>
+                    <li class="last active"><a target="_blank" href="<?php echo $setting[2]['value'];?>">加入我们</a></li>
+                </ul>
+            </div>
+
+
+            &lt;!&ndash; 分辨率小于 767px 展示 &ndash;&gt;
+            <div class="ipone_nav">
+                &lt;!&ndash; 菜单列表 &ndash;&gt;
+                <div class="ipone_navList">
+                    &lt;!&ndash; 遮罩层 &ndash;&gt;
+                    <div class="mark"></div>
+                    &lt;!&ndash; 小三角 &ndash;&gt;
+                    <div class="triangle"></div>
+                    &lt;!&ndash; 列表 &ndash;&gt;
+                    <div class="ipone_navList_info">
+                        <ul class="ipone_navList_info_icon_ul">
+                            <li class="first active">
+                                <img class="ipone_navList_info_icon" src="/Apps/Home/View/pc/images/home_page.png"
+                                    alt="">
+                                <a href="/">首页</a></li>
+                            <li class=" ">
+                                <img class="ipone_navList_info_icon" src="/Apps/Home/View/pc/images/about_us.png"
+                                    alt="">
+                                <a href="{:U('index/aboutus')}">关于我们</a></li>
+                            <li class="">
+                                <img class="ipone_navList_info_icon" src="/Apps/Home/View/pc/images/happy_work.png"
+                                    alt="">
+                                <a href="{:U('index/ourwork')}">快乐工作</a></li>
+                            <li class="last ">
+
+                                <img class="ipone_navList_info_icon" src="/Apps/Home/View/pc/images/join_us.png" alt="">
+                                <a href="{:U('index/talent')}">加入我们</a></li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+
+
+            <div class="clear"></div>
+        </div>-->
+
+        <!--<div class="lineBg"></div>-->
+
+        <div id="content">
+            <div id="main">
+                <div style="max-width:800px" class="loading-skeleton indent-on-mobile">
+                    <div class="shopTitle">
+                        <div class="shopTitleTip">买立得商家网入驻意向单</div>
+                        <!--<div class="shopTwoTitle">阳光采购|正品货源|更多选择|服务</div>-->
+                    </div>
+                    <form class="layui-form" action="">
+                        <div class="layui-form-item">
+                            <label class="layui-form-label">
+                                <span class="identification">*</span>
+                                加盟方式</label>
+                            <div class="layui-input-block">
+                                <input type="radio" name="supplier" value="0" title="供应商">
+                                <input type="radio" name="supplier" value="1" title="零售商" checked>
+                            </div>
+                        </div>
+                        <div class="layui-form-item">
+                            <label class="layui-form-label"><span class="identification">*</span>公司名称</label>
+                            <div class="layui-input-block">
+                                <input type="text" name="title" required lay-verify="required" placeholder="请输入公司名称"
+                                    autocomplete="off" class="layui-input">
+                            </div>
+                        </div>
+                        <div class="layui-form-item">
+                            <label class="layui-form-label"><span class="identification">*</span>公司地址</label>
+                            <div class="layui-input-block">
+                                <input type="text" name="address" required lay-verify="required" placeholder="请输入公司地址"
+                                    autocomplete="off" class="layui-input">
+                            </div>
+                        </div>
+
+                        <div class="layui-form-item">
+                            <label class="layui-form-label"><span class="identification">*</span>联系人</label>
+                            <div class="layui-input-inline">
+                                <input name="userName" required lay-verify="required" placeholder="请输入联系人"
+                                    autocomplete="off" class="layui-input">
+                            </div>
+                        </div>
+
+                        <div class="layui-form-item">
+                            <label class="layui-form-label"><span class="identification">*</span>联系电话</label>
+                            <div class="layui-input-inline">
+                                <input name="telephone" required lay-verify="required" placeholder="请输入联系电话"
+                                    autocomplete="off" class="layui-input">
+                            </div>
+                        </div>
+
+                        <div class="layui-form-item">
+                            <label class="layui-form-label"><span class="identification">*</span>营业执照</label>
+                            <div class="businessUploadImg">
+                                <div>
+                                    <img src="" alt="上传图片" class="businessUploadImgNone">
+                                </div>
+                                <div>
+                                    <button type="button" class="layui-btn" id="businessImg">
+                                        <i class="layui-icon">&#xe67c;</i>点击上传营业执照
+                                    </button>
+                                </div>
+
+                            </div>
+
+                        </div>
+
+
+                        <div class="layui-form-item">
+                            <label class="layui-form-label">授权许可证</label>
+
+                            <div class="certificateUploadImg">
+                                <div>
+                                    <img src="" alt="上传图片" class="certificateUploadImgNone">
+
+                                </div>
+                                <div>
+                                    <button type="button" class="layui-btn" id="certificate">
+                                        <i class="layui-icon">&#xe67c;</i>点击上传授权许可证
+                                    </button>
+                                </div>
+
+                            </div>
+
+
+
+                        </div>
+
+
+                        <div class="layui-form-item layui-form-text">
+                            <label class="layui-form-label"><span class="identification">*</span>公司简介</label>
+                            <div class="layui-input-block">
+                                <textarea name="desc" required lay-verify="required" placeholder="请输入内容"
+                                    autocomplete="off" class="layui-textarea"></textarea>
+                            </div>
+                        </div>
+
+                        <div class="layui-form-item layui-form-text">
+                            <label class="layui-form-label">备注</label>
+                            <div class="layui-input-block">
+                                <textarea name="remarks" placeholder="请输入内容" class="layui-textarea"></textarea>
+                            </div>
+                        </div>
+                        <div class="layui-form-item isProhibitStatus">
+                            <div class="layui-input-block">
+                                <!--layui-btn-disabled-->
+                                <button class="layui-btn" lay-submit lay-filter="formDemo">立即提交</button>
+                            </div>
+                        </div>
+
+                    </form>
+                    <button class="layui-btn layui-btn-disabled isProhibitStatusOk">已提交</button>
+
+                </div>
+
+            </div>
+        </div>
+        <!--<div class="lineBg"></div>-->
+
+        <!--<div id="footer">
+            <p class="link">
+                <a href="{:U('index/download')}" target="_blank">买立得商家网APP下载</a> <span>|</span>
+                <a href="{:U('index/media')}">媒体资料</a> <span>|</span>
+                <a target="_blank" href="<?php echo $setting[5]['value'];?>">联系我们</a>
+            </p>
+            <p class="copyright">
+                &copy;<?php echo htmlspecialchars_decode($config['mallFooter']);?>
+            </p>
+            <p class="license">
+                <a target="_blank" href="http://beian.miit.gov.cn" style="display:inline-block;text-decoration:none;">
+                    <img src="/Apps/Home/View/pc/images/beian.png" style="float:left;" />
+                    <span style="float:left; padding-left: 10px;"> 苏ICP备19021499号-1</span>
+                </a>
+            </p>
+        </div>-->
+
+    </div>
+    <script src="__ROOT__/Apps/Home/View/pc/js/layui/layui.all.js"></script>
+    <script>
+        // 导航栏点击事件
+        $(".ipone_nav_icon").click(function () {
+            $(".ipone_navList").stop().slideToggle("slow");
+            $(".ipone_navList_info").stop().slideToggle("slow");
+
+        });
+
+
+        // 点击遮罩层关闭右侧边栏
+        $('.mark').click(function () {
+            $(".ipone_navList").slideUp();
+            $(".ipone_navList_info").slideUp()
+        })
+
+
+        // var uploadImgUrl = 'http://www.mailide.net/Base/uploadPic'
+
+        var uploadImgUrl = 'https://www.mailide.net/index.php/Base/uploadPic',
+            baseUrl = 'https://www.mailide.net/index.php/',
+            imgPathUrl = 'https://www.mailide.net/'
+
+        // 是否再次提交
+        var isProhibit = false
+
+
+        $('.isProhibitStatus').show()
+        $('.isProhibitStatusOk').hide()
+
+
+        // 营业执照 授权许可证
+        var businessUploadImg, certificateUploadImg;
+        // 提交时的参数
+        var businessUploadImgData = '', certificateUploadImgData = '';
+
+        layui.use('upload', function () {
+            var upload = layui.upload;
+
+            //执行实例
+            var uploadInst = upload.render({
+                elem: '#businessImg' //绑定元素
+                , url: uploadImgUrl //上传接口
+                , done: function (res) {
+                    //上传完毕回调
+
+                    businessUploadImg = imgPathUrl + res.file.savepath + res.file.savename
+                    businessUploadImgData = res.file.savepath + res.file.savename
+
+                    $('.businessUploadImg img').attr('src', businessUploadImg)
+                    $('.businessUploadImgNone').show()
+                }
+                , error: function () {
+                    //请求异常回调
+                }
+            });
+        });
+
+
+        layui.use('upload', function () {
+            var upload = layui.upload;
+
+            //执行实例
+            var uploadInst = upload.render({
+                elem: '#certificate' //绑定元素
+                , url: uploadImgUrl //上传接口
+                , done: function (res) {
+                    //上传完毕回调
+                    certificateUploadImg = imgPathUrl + res.file.savepath + res.file.savename //本地显示的图片
+                    certificateUploadImgData = res.file.savepath + res.file.savename  //提交的图片
+
+
+                    $('.certificateUploadImg img').attr('src', certificateUploadImg)
+                    $('.certificateUploadImgNone').show()
+                }
+                , error: function () {
+                    //请求异常回调
+                }
+            });
+        });
+
+
+        layui.use('form', function () {
+            var form = layui.form;
+            //监听提交
+            form.on('submit(formDemo)', function (data) {
+                if (businessUploadImgData == '') {
+                    layer.msg('请上传您的营业执照', { icon: 5 })
+
+                    return false;
+                } else {
+                    $.ajax({
+                        url: baseUrl + 'Home/index/submitSettled.html',
+                        type: 'post',
+                        data: {
+                            type: data.field.supplier,
+                            companyName: data.field.title,
+                            address: data.field.address,
+                            desc: data.field.desc,
+                            linkName: data.field.userName,
+                            mobile: data.field.telephone,
+                            remark: data.field.remarks,
+                            authorization_pic: certificateUploadImgData,  //授权许可证
+                            business_pic: businessUploadImgData,   //营业执照
+                        },
+                        dataType: 'json',
+                        beforeSend: function () { },
+                        complete: function () { },
+                        success: function (res) {
+                            if (res.apiCode == 0) {
+                                layer.msg('提交成功', { icon: 1 })
+                                isProhibit = true
+                                $('.isProhibitStatus').hide()
+                                $('.isProhibitStatusOk').show()
+
+                                // location.reload();
+                            } else {
+                                layer.msg('提交失败', { icon: 5 })
+                                return false;
+                            }
+
+                        },
+                        error: function (xhr, ajaxOptions, thrownError) { }
+                    });
+                }
+                return false;
+            });
+        });
+
+    </script>
+</body>
+
+</html>

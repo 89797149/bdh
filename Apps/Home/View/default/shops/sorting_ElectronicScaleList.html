@@ -1,0 +1,379 @@
+<extend name="./Apps/Home/View/default/shops/layout.html" />
+<block name="content">
+<style type="text/css">
+#preview{border:1px solid #cccccc; background:#CCC;color:#fff; padding:5px; display:none; position:absolute;}
+
+select {
+    height: 30px;
+    box-shadow: 2px 2px 2px transparent inset;
+    border-radius: 4px;
+    border: 1px solid #dcdfe6;
+}
+
+
+.wst-page-header{
+	z-index:1 !important;
+}
+
+.wst-list tbody tr td{
+	height:70px !important;
+	line-height:70px !important;
+}
+
+.wst-list tbody tr{
+	border-bottom:1px solid #f2f2f2;
+}
+
+.wst-list tbody tr:hover{
+	background-color:#f3f5f9;
+	transition:all.5s;
+}
+
+.marks{
+	width:86%;
+	height:auto;
+	position:fixed;
+	top:0;
+	left:13%;
+	bottom:0;
+	right:0;
+	background:rgba(0,0,0,0.2);
+	z-index:2;
+	
+}
+
+.Elastic_Frame{
+	position: fixed;
+    z-index: 3;
+    background: #ffff;
+    margin: 0 auto;
+	top: 125px;
+    width: 75%;
+    height: 550px;
+    border-radius: 5px;
+	transition:all 5s;
+	-moz-transition:all 5s; 
+	-webkit-transition:all 5s;
+	-o-transition:all 5s;
+}
+
+.Elastic_Title{
+	height: 80px;
+    font-size: 24px;
+    text-align: center;
+    line-height: 80px;
+    border-bottom: 1px solid #f5f5f5;
+	color:#303133;
+	font-weight: 400;
+	margin-bottom: 40px;
+}
+
+
+.ElasticCnt{
+    height: 100px;
+    line-height: 100px;
+    margin-left: 30px;
+    font-size: 15px;
+	color:#606266;
+	text-align:center;
+}
+
+.el-input{
+	width:20% !important;
+}
+
+.Operation_Decision{
+	text-align:center;
+
+}
+
+
+.Operation_Btn{
+	width: 10%;
+    font-size: 16px !important;
+    line-height: 18px !important;
+	margin-top: 50px !important;
+    margin-right: 11px !important;
+	
+}
+
+
+
+</style>
+<link rel="stylesheet" href="https://unpkg.com/element-ui/lib/theme-chalk/index.css">
+<script src="__PUBLIC__/plugins/layer/layer.min.js"></script>
+<script src="__ROOT__/Apps/Home/View/default/js/vue.js" type="text/javascript" charset="utf-8"></script>
+<script src="__ROOT__/Apps/Home/View/default/js/vue-resource.js" type="text/javascript" charset="utf-8"></script>
+<script src="https://unpkg.com/element-ui/lib/index.js"></script>
+				
+				
+<script>
+	if(typeof(isClient)!=='undefined'){		
+
+		
+		function addElectricBtn(){
+			layer.open({
+				type: 2,
+				title:"新增列表",
+				shade: [0.6, '#000'],
+				border: [0],
+				//content:'Home/Orders/addElectricList.html',
+				content:'',
+
+				area: ['1020px', ($(window).height() - 50) +'px']
+			});
+		}
+	}
+	
+
+</script>
+	
+
+	
+<div  id="sortingApp"  class="wst-body"> 
+   <div class='wst-page-header'>卖家中心 > 拣货员</div>
+	<div class='wst-page-content'  style='padding-top: 96px;'>
+	<div class='wst-tbar-query listHeaderInput'>
+		<el-button type="primary" plain @click="newAdd()">新增</el-button>
+	</div>
+	<table class='wst-list'>
+	   <thead>
+		 <tr>
+		   <th width="150">姓名</th> 
+		   <th width="280">电话</th>
+		   <th width="180">状态</th>
+		   <th style="text-align:center;">操作</th>
+		 </tr>
+	   </thead>
+	   
+		<tbody v-for="item in sortingList">
+			<td>
+				{{item.userName}}
+			</td>
+			<td>
+				{{item.mobile}}
+			</td>
+			<td v-if="item.state == 1">
+				在线
+				
+			</td>
+			<td v-else="item.state == -1">
+				不在线
+				
+			</td>
+			<td style="text-align:center;">
+				<el-button type="primary" plain @click=bindUpdate(item.id,item.userName,item.mobile)>编辑</el-button>
+				<el-button type="warning" plain @click=delateUserName(item.id)>删除</el-button>
+			</td>
+		</tbody>
+	</table>
+	
+	<!-- 添加拣货员弹框 -->
+	
+	<div class="marks" v-show="dialogFormVisible"></div>
+	
+	<div class="Elastic_Frame" v-show="dialogFormVisible">
+	
+		<p class="Elastic_Title">添加拣货员</p>
+		<div class="ElasticCnt">
+			<span>拣货员姓名：</span>
+			<el-input v-model="userName" placeholder="请输入拣货员姓名"></el-input>
+		</div>
+		
+		<div class="ElasticCnt">
+			<span>拣货员电话：</span>
+			<el-input placeholder="请输入内容" v-model="mobile" placeholder="请输入拣货员电话"></el-input>
+		</div>
+
+		
+		<div class="Operation_Decision">
+			<el-button class="Operation_Btn" type="primary" plain @click="completeElastic()">确定</el-button>
+			<el-button class="Operation_Btn" type="warning" plain @click="cancelElastic()">取消</el-button>
+			
+		</div>
+
+		
+	</div>
+	
+	
+	
+	<!-- 修改拣货员弹框 -->
+	
+	<div class="marks" v-show="updateDialogFormVisible"></div>
+	
+	<div class="Elastic_Frame" v-show="updateDialogFormVisible">
+	
+		<p class="Elastic_Title">修改拣货员</p>
+		<div class="ElasticCnt">
+			<span>拣货员姓名：</span>
+			<el-input v-model="userName" placeholder="请输入拣货员姓名"></el-input>
+		</div>
+	 
+		<div class="ElasticCnt">
+			<span>拣货员电话：</span>
+			<el-input placeholder="请输入内容" v-model="mobile" placeholder="请输入拣货员电话"></el-input>
+		</div>
+
+		
+		<div class="Operation_Decision">
+			<el-button class="Operation_Btn" type="primary" plain @click="completeUpdate()">确定</el-button>
+			<el-button class="Operation_Btn" type="warning" plain @click="cancelUpdate()">取消</el-button>
+			
+		</div>
+
+		
+	</div>
+	
+
+	</div>
+</div>
+	
+		
+<script>	
+	var sortingApp = new Vue({
+		el:'#sortingApp',
+		data: function() {
+			return { 
+				sortingList:[],
+				userName:'',
+				mobile:'',
+				id:'',
+				dialogFormVisible :false,
+				updateDialogFormVisible:false
+			}
+		},
+
+		
+		created: function () {
+			this.sortingLists() //定义方法
+		},
+		
+		methods:{
+		//获取拣货员列表
+			sortingLists: function () {
+				var that = this;
+				this.$http.post("{:U('sorting/getlist')}", {
+					emulateJSON: true
+				}).then((res) => {
+					  this.sortingList = res.data
+				}, (err) => {
+				})
+			},
+			
+			//点击新增
+			newAdd:function(){
+				this.dialogFormVisible = true
+				this.userName = ''
+				this.mobile=''
+			},
+			
+			
+			//点击取消
+			cancelElastic:function(){
+				
+				this.dialogFormVisible = false
+				this.userName = ''
+				this.mobile=''
+			},
+			//点击确定
+			completeElastic:function(){
+			
+				var that = this;
+				let userName = that.userName
+				let mobile = that.mobile
+				
+				var myreg = /^13[\d]{9}$|^14[5,7]{1}\d{8}$|^15[^4]{1}\d{8}$|^16[\d]{9}$|^17[0,6,7,8,3]{1}\d{8}$|^18[\d]{9}$|^19[\d]{9}$/;
+				  if (mobile.length = 11 && myreg.test(mobile) == true && userName!=='') {
+					  this.$http.post("{:U('sorting/add')}", {userName:userName,mobile:mobile},{
+						emulateJSON: true
+						}).then((res) => {
+							  this.sortingLists() //定义方法
+						}, (err) => {
+						})
+						this.dialogFormVisible = false
+					}else{
+					   layer.msg('您输入的拣货员信息有误，请检查后在提交', {
+							time: 3000,
+						 
+						});
+					}
+			},
+			
+			
+			//删除
+			
+			delateUserName:function(id){
+				this.$http.post("{:U('sorting/del')}", {id:id},{
+					emulateJSON: true
+					}).then((res) => {
+						  let msgTip = res.data.msg
+						  if(res.data.code == 1){
+							this.sortingLists()
+							layer.msg(msgTip, {
+								time: 3000,
+							});
+							
+						  }else if((res.data.code == -1)){
+							 layer.msg(msgTip, {
+								time: 3000,
+						 
+							});
+						  }
+						 
+
+					}, (err) => {
+				})
+			},
+			
+			
+			//点击修改弹框
+			
+			bindUpdate:function(id,userName,mobil){
+				this.updateDialogFormVisible = true
+				this.userName = userName
+				this.mobile = mobil
+				this.id = id
+			},
+			
+			//点击取消修改弹框
+			
+			cancelUpdate:function(){
+				this.updateDialogFormVisible = false
+			},
+			
+			//修改
+			completeUpdate:function(){
+				var  that = this
+				
+				this.$http.post("{:U('sorting/update')}", {id:this.id,userName:this.userName,mobile:this.mobile},{
+					emulateJSON: true
+					}).then((res) => {
+						  this.updateDialogFormVisible = false
+						   let msgTip = res.data.msg
+						  if(res.data.code == 1){
+							this.sortingLists() //定义方法
+							layer.msg(msgTip, {
+								time: 3000, //20s后自动关闭
+						 
+							});
+						  }else if((res.data.code == -1)){
+							layer.msg(msgTip, {
+								time: 3000, //20s后自动关闭
+						 
+							});
+						  }
+						 
+
+					}, (err) => {
+				})
+			
+			},
+			
+			
+		},
+		
+	
+	})
+</script>
+	
+</block> 

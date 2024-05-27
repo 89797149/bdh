@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html><head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<title>多门店</title>
+<style>
+	.inviteDiv{
+		width:100%;
+	}
+	.inviteDiv input,.toinvite{
+		width:70%;
+		margin:0 auto;
+		height:60px;
+	}
+	.inviteDiv .hqYzcode{
+		position:relative;
+		width:70%;
+		margin:0 auto;
+	}
+	.inviteDiv .hqYzcode input{
+		width:100%;
+	}
+	.yzmCode{
+		position:absolute;
+		right:0;
+		top:0;
+		padding: 4%;
+		font-size: 16px;
+		color:#fff;
+		background:#3ad964;
+		border-radius:30px;
+	}
+	.toinvite{
+		background:#3ad964;
+		color:#fff;
+		padding:5% 20%;
+		border-radius:3px;
+	}
+	.inviteDiv input{
+		margin:10% auto 5%;
+	}
+</style>
+<script>
+	function toLoad() {
+		window.location.href=""
+
+	}
+</script>
+</head>
+<body>
+	<div class="inviteDiv" style="text-align:center;">
+		<img style="width:100%;" src="./topimg.png">
+		<input type="number" value="输入手机号"/>
+		<p class="hqYzcode">
+			<input type="number" value="输入验证码"/>
+			<span class="yzmCode">获取验证码</span>
+		</p>
+		<a href="niaocms://" class="toinvite" onclick="toLoad()">接受邀请领红包</a>
+	</div>
+</body>
+</html>

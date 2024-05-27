@@ -1,0 +1,495 @@
+<extend name="./Apps/Home/View/default/shops/layout.html" />
+<block name="content">
+<link rel="stylesheet" type="text/css" href="__PUBLIC__/plugins/webuploader/style.css" />
+<link rel="stylesheet" type="text/css" href="__PUBLIC__/plugins/webuploader/webuploader.css" />
+<script type="text/javascript" src="__ROOT__/Apps/Home/View/default/js/shopsbatchupload.js"></script>
+<style>
+.webuploader-container{
+	background-color:transparent;
+}
+	.webuploader-container .webuploader-pick{
+		padding: 4px 0px;
+		line-height: 34px;
+		width: 125px;
+		    color: #409eff;
+    background: #ecf5ff;
+    border:1px solid #b3d8ff;
+    border-radius: 5px;
+	}
+	.webuploader-container .webuploader-pick-hover{
+	background:#409eff;
+	color:#fff;
+}
+#uploader .statusBar .btns .uploadBtn {
+    background: #00b7ee;
+    color: #fff;
+    border-color: transparent;
+    height: 32px;
+    line-height: 32px;
+    width: 80px;
+    padding: 0;
+    text-align: center;
+}
+</style>
+<script>
+$(function () {
+	$.formValidator.initConfig({
+		   theme:'Default',mode:'AutoTip',formID:"myform",debug:true,submitOnce:true,onSuccess:function(){
+			   setShop();
+			   return false;
+			},onError:function(msg){
+	}});
+	$("#shopKeywords").formValidator({onShow:"",onFocus:"请输入店铺SEO关键字",onCorrect:"输入正确"}).inputValidator({min:1,max:50,onError:"店铺SEO关键字不能为空,请确认"});
+	var uploading = null;
+	uploadFile({
+    	  server:Think.U('Home/shops/uploadPic'),pick:'#shopBannerPicker',
+    	  formData: {dir:'shops'},
+    	  callback:function(f){
+    		  layer.close(uploading);
+    		  var json = WST.toJson(f);
+    		  $('#shopBannerPreview').attr('src',WST.DOMAIN+"/"+json.file.savepath+json.file.savethumbname);
+    		  $('#shopBanner').val(json.file.savepath+json.file.savename);
+    		  $('#shopBannerPreview').show();
+	      },
+	      progress:function(rate){
+	    	  uploading = WST.msg('正在上传图片，请稍后...');
+	      }
+    });  
+
+	//秒杀首页图片
+	uploadFile({
+    	  server:Think.U('Home/shops/uploadPic'),pick:'#msfilePicker',
+    	  formData: {dir:'shops'},
+    	  callback:function(f){
+    		  layer.close(uploading);
+    		  var json = WST.toJson(f);
+    		  $('#mspreview').attr('src',WST.DOMAIN+"/"+json.file.savepath+json.file.savethumbname);
+			   $('#appMiaosha')[0].value = json.file.savepath+json.file.savename;
+    		  $('#mspreview').show();
+	      },
+	      progress:function(rate){
+	    	  uploading = WST.msg('正在上传图片，请稍后...');
+	      }
+    }); 
+	//秒杀列表图片
+	uploadFile({
+    	  server:Think.U('Home/shops/uploadPic'),pick:'#msfilePickerSrc',
+    	  formData: {dir:'shops'},
+    	  callback:function(f){
+    		  layer.close(uploading);
+    		  var json = WST.toJson(f);
+    		  $('#mspreviewSrc').attr('src',WST.DOMAIN+"/"+json.file.savepath+json.file.savethumbname);
+			  $('#appMiaoshaSRC')[0].value = json.file.savepath+json.file.savename;
+    		  $('#mspreviewSrc').show();
+	      },
+	      progress:function(rate){
+	    	  uploading = WST.msg('正在上传图片，请稍后...');
+	      }
+    });
+	
+	
+	
+	//预售首页图片
+	
+	uploadFile({
+    	  server:Think.U('Home/shops/uploadPic'),pick:'#ysfilePicker',
+    	  formData: {dir:'shops'},
+    	  callback:function(f){
+    		  layer.close(uploading);
+    		  var json = WST.toJson(f);
+    		  $('#yspreview').attr('src',WST.DOMAIN+"/"+json.file.savepath+json.file.savethumbname);
+			  $('#appYushou')[0].value = json.file.savepath+json.file.savename;
+    		  $('#yspreview').show();
+	      },
+	      progress:function(rate){
+	    	  uploading = WST.msg('正在上传图片，请稍后...');
+	      }
+    });
+	
+	//预售列表图片
+	
+	uploadFile({
+    	  server:Think.U('Home/shops/uploadPic'),pick:'#ysfilePickerSrc',
+    	  formData: {dir:'shops'},
+    	  callback:function(f){
+    		  layer.close(uploading);
+    		  var json = WST.toJson(f);
+    		  $('#yspreviewSrc').attr('src',WST.DOMAIN+"/"+json.file.savepath+json.file.savethumbname);
+			  $('#appYushouSRC')[0].value = json.file.savepath+json.file.savename;
+    		  $('#yspreviewSrc').show();
+	      },
+	      progress:function(rate){
+	    	  uploading = WST.msg('正在上传图片，请稍后...');
+	      }
+    });
+	
+		
+	//人气首页榜单
+		uploadFile({
+    	  server:Think.U('Home/shops/uploadPic'),pick:'#bdfilePicker',
+    	  formData: {dir:'shops'},
+    	  callback:function(f){
+    		  layer.close(uploading);
+    		  var json = WST.toJson(f);
+    		  $('#bdpreview').attr('src',WST.DOMAIN+"/"+json.file.savepath+json.file.savethumbname);
+			  $('#AppRenqi')[0].value = json.file.savepath+json.file.savename;
+    		  $('#bdpreview').show();
+	      },
+	      progress:function(rate){
+	    	  uploading = WST.msg('正在上传图片，请稍后...');
+	      }
+    });
+	//人气列表榜单
+		uploadFile({
+    	  server:Think.U('Home/shops/uploadPic'),pick:'#bdfilePickerSrc',
+    	  formData: {dir:'shops'},
+    	  callback:function(f){
+    		  layer.close(uploading);
+    		  var json = WST.toJson(f);
+    		  $('#bdpreviewSrc').attr('src',WST.DOMAIN+"/"+json.file.savepath+json.file.savethumbname);
+			  $('#AppRenqiSRC')[0].value = json.file.savepath+json.file.savename;
+    		  $('#bdpreviewSrc').show();
+	      },
+	      progress:function(rate){
+	    	  uploading = WST.msg('正在上传图片，请稍后...');
+	      }
+    });
+	
+	
+	//首页分类第一个
+		uploadFile({
+    	  server:Think.U('Home/shops/uploadPic'),pick:'#typeOnefilePickerSrc',
+    	  formData: {dir:'shops'},
+    	  callback:function(f){
+		  console.log(f)
+    		  layer.close(uploading);
+    		  var json = WST.toJson(f);
+    		  $('#typeOnepreviewSrc').attr('src',WST.DOMAIN+"/"+json.file.savepath+json.file.savethumbname);
+			  $('#appTypeimgOneSrc')[0].value = json.file.savepath+json.file.savename;
+    		  $('#typeOnepreviewSrc').show();
+	      },
+	      progress:function(rate){
+	    	  uploading = WST.msg('正在上传图片，请稍后...');
+	      }
+    });
+	
+	//首页分类第二个
+		uploadFile({
+    	  server:Think.U('Home/shops/uploadPic'),pick:'#typeTwofilePickerSrc',
+    	  formData: {dir:'shops'},
+    	  callback:function(f){
+    		  layer.close(uploading);
+    		  var json = WST.toJson(f);
+			  
+    		  $('#typeTwopreviewSrc').attr('src',WST.DOMAIN+"/"+json.file.savepath+json.file.savethumbname);
+			  $('#appTypeimgTwoSrc')[0].value = json.file.savepath+json.file.savename;
+    		  $('#typeTwopreviewSrc').show();
+	      },
+	      progress:function(rate){
+	    	  uploading = WST.msg('正在上传图片，请稍后...');
+	      }
+    });
+	//首页分类第三个
+		uploadFile({
+    	  server:Think.U('Home/shops/uploadPic'),pick:'#typeThreefilePickerSrc',
+    	  formData: {dir:'shops'},
+    	  callback:function(f){
+    		  layer.close(uploading);
+    		  var json = WST.toJson(f);
+    		  $('#typeThreepreviewSrc').attr('src',WST.DOMAIN+"/"+json.file.savepath+json.file.savethumbname);
+			  $('#appTypeimgThreeSrc')[0].value = json.file.savepath+json.file.savename;
+    		  $('#typeThreepreviewSrc').show();
+	      },
+	      progress:function(rate){
+	    	  uploading = WST.msg('正在上传图片，请稍后...');
+	      }
+    });
+	
+});
+
+function imglimouseover(obj){
+	if(!$(obj).find('.file-panel').html()){
+		$(obj).find('.setdel').addClass('trconb');
+		$(obj).find('.setdel').css({"display":""});
+	}
+}
+
+function imglimouseout(obj){
+	
+	$(obj).find('.setdel').removeClass('trconb');
+	$(obj).find('.setdel').css({"display":"none"});
+}
+
+function imglidel(obj){
+	if (confirm('是否删除图片?')) {
+		$(obj).parent().remove("li");
+		return;
+	}
+}
+</script>
+   <div class="wst-body" style="position:relative;"> 
+       <div class='wst-page-header'>卖家中心 > 店铺设置</div>
+       <div class='wst-page-content' style='padding-top: 93px;'>
+       
+       <form name="myform" method="post" id="myform" autocomplete="off">
+       	<input type='hidden' id='id' value='0'/>
+        <input type='hidden' id='shopBanner' value='{$object.shopBanner}'/>
+		
+		<input type='hidden' id='appTypeimgOneSrc' name="appTypeimg" value='{$object.appTypeimg}'/>
+		<input type='hidden' id='appTypeimgTwoSrc' name="appTypeimg2" value='{$object.appTypeimg2}'/>
+		<input type='hidden' id='appTypeimgThreeSrc' name="appTypeimg3" value='{$object.appTypeimg3}'/>
+		
+		<input type='hidden' id='appMiaosha' name="appMiaosha" value='{$object.appMiaosha}'/>
+		<input type='hidden' id='appYushou' name="appYushou" value='{$object.appYushou}'/>
+		<input type='hidden' id='AppRenqi' name="AppRenqi" value='{$object.AppRenqi}'/>
+		
+		<input type='hidden' id='appMiaoshaSRC' name="appMiaoshaSRC" value='{$object.appMiaoshaSRC}'/>
+		<input type='hidden' id='appYushouSRC' name="appYushouSRC" value='{$object.appYushouSRC}'/>
+		<input type='hidden' id='AppRenqiSRC' name="AppRenqiSRC" value='{$object.AppRenqiSRC}'/>
+
+		
+        <table class="table table-hover table-striped table-bordered wst-form">
+            <tr>
+             <th width='150' align='right'>是否启动订单分拣功能<font color='red'>*</font>：</th>
+             <td>
+             <label>
+             <input type='radio' id='isSorting1' name='isSorting' value='1' <if condition="$object['isSorting'] ==1 ">checked</if> />是&nbsp;&nbsp;
+             </label>
+             <label>
+             <input type='radio' id='isSorting0' name='isSorting' value='-1' <if condition="$object['isSorting']==-1 ">checked</if> />否
+             </label>
+             </td>
+           </tr>
+		   <tr>
+             <th width='140' align='right'>是否自动接单<font color='red'>*</font>：</th>
+             <td>
+             <label>
+             <input type='radio' id='isReceipt1' name='isReceipt' value='1' <if condition="$object['isReceipt'] ==1 ">checked</if> />是&nbsp;&nbsp;
+             </label>
+             <label>
+             <input type='radio' id='isReceipt0' name='isReceipt' value='-1' <if condition="$object['isReceipt'] ==-1 ">checked</if> />否
+             </label>
+             </td>
+           </tr>
+           <tr>
+             <th width='120' align='right'>店铺SEO关键字<font color='red'>*</font>：</th>
+             <td><input type='text' id='shopKeywords' class="form-control wst-ipt" value='{$object.shopKeywords}' style='width:350px;' maxLength='25'/></td>
+           </tr>
+           <tr>
+	         <th width='120'>店铺SEO描述：</th>
+	         <td colspan='3'>
+	             <textarea rows="2" style='width:350px;' id='shopDesc' name='shopDesc' >{$object.shopDesc}</textarea>
+	         </td>
+	      </tr>
+           <tr style="height:80px;">
+             <th style='padding-top: 13px;' width='120' align='right' valign='top'>顶部广告：</th>
+             <td>
+                <div id="shopBannerPicker" style='margin-left:0px;margin-top:5px;height:50px;overflow:hidden'>上传顶部广告图片</div>
+             	<div>图片大小:750 x 350 (px)(格式为 gif, jpg, jpeg, png)</div>
+             	<div style="margin-top:5px;">
+             		<img height="60" id='shopBannerPreview' <if condition="$object.shopBanner neq ''">src="__ROOT__/{$object.shopBanner}"<else />src="__ROOT__/Apps/Home/View/default/images/s.gif"</if>/>
+             	</div>
+             </td>
+           </tr>
+		   
+		   <tr style="height:80px;">
+             <th style='padding-top: 13px;' width='120' align='right' valign='top'>首页秒杀横图：</th>
+             <td>
+             	<div id="msfilePicker" class="webuploader-pick" style='margin-left:0px;height: 37px;margin-top: 5px;overflow:hidden'>上传首页秒杀横图</div>
+				<div>图片大小:750 x 220 (px)(格式为 gif, jpg, jpeg, png)</div>
+   
+                <div style="margin-top:5px;">
+             		<img height="60" id='mspreview' alt="请上传图片" src='__ROOT__/{$object.appMiaosha}' />
+             	</div>
+             </td>
+           </tr>
+		   
+		   <tr style="height:80px;">
+             <th style='padding-top: 13px;' width='120' align='right' valign='top'>列表秒杀横图：</th>
+             <td>
+             	<div id="msfilePickerSrc" class="webuploader-pick" style='margin-left:0px;margin-top:5px;height:37px;overflow:hidden'>上传列表秒杀横图</div>
+				<div>图片大小:750 x 350 (px)(格式为 gif, jpg, jpeg, png)</div>
+   
+                <div style="margin-top:5px;">
+             		<img height="60" id='mspreviewSrc' alt="请上传图片" src='__ROOT__/{$object.appMiaoshaSRC}' />
+             	</div>
+             </td>
+           </tr>
+		   
+		   
+		   <tr style="height:80px;">
+             <th style='padding-top: 13px;' width='120' align='right' valign='top'>首页预售图：</th>
+             <td>
+             	<div id="ysfilePicker" class="webuploader-pick" style='margin-left:0px;margin-top:5px;height:37px;overflow:hidden'>上传首页预售图</div>
+				<div>图片大小:750 x 220 (px)(格式为 gif, jpg, jpeg, png)</div>
+   
+                <div style="margin-top:5px;">
+             		<img height="60" id='yspreview' alt="请上传图片" src='__ROOT__/{$object.appYushou}'/>
+             	</div>
+             </td>
+           </tr>
+		   
+		   <tr style="height:80px;">
+             <th style='padding-top: 13px;' width='120' align='right' valign='top'>列表预售图：</th>
+             <td>
+             	<div id="ysfilePickerSrc" class="webuploader-pick" style='margin-left:0px;margin-top:5px;height:37px;overflow:hidden'>上传列表预售图</div>
+				<div>图片大小:750 x 350 (px)(格式为 gif, jpg, jpeg, png)</div>
+   
+                <div style="margin-top:5px;">
+             		<img height="60" id='yspreviewSrc' alt="请上传图片" src='__ROOT__/{$object.appYushouSRC}'/>
+             	</div>
+             </td>
+           </tr>
+		   
+		   <tr style="height:80px;">
+             <th style='padding-top: 13px;' width='120' align='right' valign='top'>首页人气榜单：</th>
+             <td>
+             	<div id="bdfilePicker" class="webuploader-pick" style='margin-left:0px;margin-top:5px;height:37px;overflow:hidden'>上传首页人气榜单</div>
+				<div>图片大小:750 x 220 (px)(格式为 gif, jpg, jpeg, png)</div>
+   
+                <div style="margin-top:5px;">
+             		<img height="60" id='bdpreview' alt="请上传图片" src='__ROOT__/{$object.AppRenqi}'/>
+             	</div>
+             </td>
+           </tr>
+		   
+		   <tr style="height:80px;">
+             <th style='padding-top: 13px;' width='120' align='right' valign='top'>列表人气榜单：</th>
+             <td>
+             	<div id="bdfilePickerSrc" class="webuploader-pick" style='margin-left:0px;margin-top:5px;height:37px;overflow:hidden'>上传列表人气榜单</div>
+				<div>图片大小:750 x 350 (px)(格式为 gif, jpg, jpeg, png)</div>
+   
+                <div style="margin-top:5px;">
+             		<img height="60" id='bdpreviewSrc' alt="请上传图片" src='__ROOT__/{$object.AppRenqiSRC}'/>
+             	</div>
+             </td>
+           </tr>
+		   
+		    <tr style="height:80px;">
+             <th style='padding-top: 13px;' width='120' align='right' valign='top'>首页分类图一：</th>
+             <td>
+             	<div id="typeOnefilePickerSrc" class="webuploader-pick" style='margin-left:0px;margin-top:5px;height:37px;overflow:hidden'>上传首页分类图</div>
+				<div>图片大小:370 x 286 (px)(格式为 jpg, jpeg, png)</div>
+   
+                <div style="margin-top:5px;">
+             		<img height="60" id='typeOnepreviewSrc' alt="请上传图片" src='__ROOT__/{$object.appTypeimg}'/>
+					
+             	</div>
+             </td>
+           </tr>
+		   
+		   
+		    <tr style="height:80px;">
+             <th style='padding-top: 13px;' width='120' align='right' valign='top'>首页分类图二：</th>
+             <td>
+             	<div id="typeTwofilePickerSrc" class="webuploader-pick" style='margin-left:0px;margin-top:5px;height:37px;overflow:hidden'>上传首页分类图</div>
+				<div>图片大小:308 x 137 (px)(格式为 jpg, jpeg, png)</div>
+   
+                <div style="margin-top:5px;">
+             		<img height="60" id='typeTwopreviewSrc' alt="请上传图片" src='__ROOT__/{$object.appTypeimg2}'/>
+             	</div>
+             </td>
+           </tr>
+		   
+		   
+		    <tr style="height:80px;">
+             <th style='padding-top: 13px;' width='120' align='right' valign='top'>首页分类图三：</th>
+             <td>
+             	<div id="typeThreefilePickerSrc" class="webuploader-pick" style='margin-left:0px;margin-top:5px;height:37px;overflow:hidden'>上传首页分类图</div>
+				<div>图片大小:308 x 137 (px)(格式为 jpg, jpeg, png)</div>
+   
+                <div style="margin-top:5px;">
+             		<img height="60" id='typeThreepreviewSrc' alt="请上传图片" src='__ROOT__/{$object.appTypeimg3}'/>
+             	</div>
+             </td>
+           </tr>
+		   
+		   
+           <tr>
+             <th width='120' align='right'>滚动广告<font color='red'>*</font>：</th>
+             <td>
+             	
+		       <div id='galleryImgs' class='wst-gallery-imgs'>
+		        
+		       	 <if condition="count($object['shopAds']) eq 0" >
+                       <div id="wrapper">
+                           <div id="container">
+                           	<div style="" class="statusBar">
+                            	图片大小:750 x 350 (px)(格式为 gif, jpg, jpeg, png)
+                    		</div>
+                       
+            <!--头部，相册选择和格式选择-->
+                              <div id="uploader">
+                               <div class="queueList">
+                                   <div id="dndArea" class="placeholder">
+                                      <div id="filePicker"></div>
+                                      </div>
+                                   <ul class="filelist listHeaderInput"></ul>
+                               </div>
+                             <div class="statusBar" style="display:none">
+                               <div class="progress">
+                                    <span class="text">0%</span>
+                                    <span class="percentage"></span>
+                               </div>
+                                    <div class="info"></div>
+                               <div class="btns">
+                                 <div id="filePicker2" class="webuploader-containe webuploader-container"></div><div class="uploadBtn state-finish">开始上传</div>
+                               </div>
+                            </div>
+                         </div>
+                      </div>
+                   </div>
+               <else/>
+               	<div id="wrapper">
+                       <div id="container">
+                       		<div style="border-bottom:1px solid #dadada;padding-left:10px; ">
+                          		图片大小:750 x 350 (px)(格式为 gif, jpg, jpeg, png)
+                   			</div>
+                          	<div id="uploader">
+                             <div class="queueList">
+                                 <div id="dndArea" class="placeholder element-invisible">
+                                    <div id="filePicker" class="webuploader-container"></div>
+                                    </div>
+                                 <ul class="filelist listHeaderInput">
+                                 	<volist name="object['shopAds']" id="vo" key='i'>
+								       <li style="border: 1px solid rgb(59, 114, 165)" order="100" onmouseover="imglimouseover(this)" onmouseout="imglimouseout(this)">
+								       		<input type="hidden" class="gallery-img" iv="{$vo.adImg_thumb}" v="{$vo.adImg}" />
+									       <img width="152" height="152" src="__ROOT__/{$vo.adImg_thumb}"><span class="setdef" style="display:none">默认</span><span class="setdel" onclick="imglidel(this)" style="display:none">删除</span>
+								       	   <input class="gallery-img-url"  placeholder="商品id" type="text" style="width:118px;" value="{$vo.adUrl}"/>
+								       </li>
+									</volist>
+								       
+                                 	
+                                 </ul>
+                            </div>
+                            <div class="statusBar" style="">
+                               <div class="progress">
+                                    <span class="text"></span>
+                                    <span class="percentage"></span>
+                               </div>
+                               <div class="info"></div>
+                               <div class="btns">
+                                  <div id="filePicker2" class="webuploader-containe webuploader-container"></div>
+                                  <div class="uploadBtn state-finish">开始上传</div>
+                               </div>
+                            </div>
+                        </div>
+                    </div>
+                 </div>
+               </if>
+		       
+		       </div>
+		       <div style='clear:both;'></div>
+             </td>
+           </tr>
+           <tr>
+             <td colspan='2' style="padding: 40px 0;text-align: center;">
+                 <button type="submit" class='wst-btn-query' style='margin-top:5px;background-color: #6aac38;margin-left: -53px;color:#fff;'>保&nbsp;存</button>&nbsp;&nbsp;
+                 <button type="button" class='wst-btn-query' style='margin-top:5px;margin-left:26px;background-color: #867d78;color:#fff;' onclick='javascript:location.reload();'>重&nbsp;置</button>
+             </td>
+           </tr>
+        </table>
+       </form>
+       </div>
+   </div>
+</block>  

@@ -1,0 +1,320 @@
+/**
+ * Created by sunyt on 2016/10/8.
+ */
+
+var u = navigator.userAgent;
+var isAndroid = u.indexOf('Android') > -1 || u.indexOf('Linux') > -1;
+var isIOS = !!u.match(/\(i[^;]+;( U;)? CPU.+Mac OS X/); //ios终端
+var can_shake = 0;
+var can_get = 1;
+var sign_url = '';
+
+function GetQueryString(name) { 
+  var reg = new RegExp("(^|&)" + name + "=([^&]*)(&|$)", "i"); 
+  var r = window.location.search.substr(1).match(reg); //获取url中"?"符后的字符串并正则匹配
+  var context = ""; 
+  if (r != null) 
+     context = r[2]; 
+  reg = null; 
+  r = null; 
+  return context == null || context == "" || context == "undefined" ? "" : context; 
+}
+
+
+if(isAndroid || isIOS){
+    window.alert = function(name){
+        var iframe = document.createElement("IFRAME");
+        iframe.style.display="none";
+        if(!isAndroid){
+            iframe.setAttribute("src", 'data:text/plain,');
+        }
+        document.documentElement.appendChild(iframe);
+        window.frames[0].window.alert(name);
+        iframe.parentNode.removeChild(iframe);
+    };
+    window.confirm = function(name){
+        var iframe = document.createElement("IFRAME");
+        iframe.style.display="none";
+        if(!isAndroid){
+            iframe.setAttribute("src", 'data:text/plain,');
+        }
+        document.documentElement.appendChild(iframe);
+        var a = window.frames[0].window.confirm(name);
+        iframe.parentNode.removeChild(iframe);
+        return a;
+    }
+}
+
+
+function stop_shake(){
+    $("#can_shake1").val(9);
+}
+
+function start_shake(){
+    $("#can_shake1").val(0);
+}
+
+function getArgs(){
+    var args = {};
+    var search = decodeURIComponent(location.search.substring(1));
+    var is_new = search.indexOf("=");
+        var match = null;
+        var reg = /(?:([^&]+)=([^&]+))/g;
+        while((match = reg.exec(search))!==null){
+            args[match[1]] = match[2];
+        }
+        return args;
+    // }
+}
+
+var aa="https://huodong.fruitday.com"; //https://huodong.fruitday.com";// //http://staging.active.fruitday.com
+
+
+function genShare(pic_name){
+    $.ajax({
+        type: 'get',
+        url: aa+"/activepage/buyTj_v1?type=shake_app_share",
+        jsonp: 'jsonp',
+        xhrFields: {
+            withCredentials: true
+        },
+        crossDomain: true,
+        success: function (data) {
+        }
+    });
+    var desc = ["摇一摇新升级，更多积分赠品诚意奉上，follow me"];
+    var n = Math.floor(Math.random() * desc.length + 1)-1;
+    if(pic_name==""){
+        var pic_name = $("#pic_name").val();
+    }
+
+    //暂时留着 以后用到
+
+    // var share_url = "awshuodong.fruitday.com";
+//		console.log("fruitday://Share?shareUrl=http://"+share_url+"/sale/shake/rules.html&shareText=【天天果园】"+desc[n]+"&shareTitle=【天天果园】"+desc[n]+"&iconUrl=http://activecdn.fruitday.com/sale/shake/images/"+pic_name+"&shareType=2,3");
+    document.location = "fruitday://Share?shareUrl=https://awshuodong.fruitday.com/sale/shake/zhong.html&shareText=【天天果园】"+desc[n]+"&shareTitle=【天天果园】"+desc[n]+"&iconUrl="+pic_name+"&shareType=2,3,4";
+}
+
+function initShake(gets){
+    $.post(aa+"/shake/initShake_b2o",{connect_id:gets.connect_id},function(result){
+        $("#left_num").text(result.shake_left);
+        if(result.shake_left===0){
+            $(".h3_1").hide();
+            $(".h3_2").show();
+        }
+        $("#today_shake_num").text(result.today_shake_num);
+        can_shake=1;
+        sign_url = result.sign_url;
+    },'json');
+}
+
+function checkVersion(version,compare_val){
+    // return true;   //ios test coding
+    return version>compare_val?true:false;
+}
+
+    $(function(){
+
+    //鸟CMS
+    if(GetQueryString('memberToken') == ''){
+        var t=setTimeout("alert('请先登陆');document.location = 'fruitday://Login';",1000)
+    }
+    
+    var gets = getArgs();
+
+    var is_n_cart = checkVersion(gets.version,'5.1.0');
+    if(!gets.connect_id  || gets.connect_id == 'undefined'){
+      if(gets.platform == 'wechatapp'){
+        // alert(window.location.href);
+        // wx.miniProgram.navigateTo({url: "/pages/login/index"});
+        // return false;
+        var t=setTimeout("alert('请先登陆');"+wx.miniProgram.navigateTo({url: "/pages/login/index"})+";",1000)
+      }else{
+       
+      }
+    }else{
+        initShake(gets);
+    }
+    if(gets.platform == 'android'){
+        $(".androidApp").removeClass("hide");
+    }
+    //到赠品
+    $(".goGift").on('click',function(){
+        // fruitday://Gift
+        // alert(gets.platform);
+        if(gets.platform == 'wechatapp'){
+          wx.miniProgram.navigateTo({url: "/pages/me/gift/index"});
+          return false;
+        }
+        window.location.href = "fruitday://Gift";
+    });
+
+
+
+    $(".link-share").click(function(){
+        // genShare("");
+        doResult();
+    });
+
+     
+
+    $(".result-component").removeClass("animation");
+    var SHAKE_THRESHOLD = 800;
+    var last_update = 0;
+    var x = y = z = last_x = last_y = last_z = 0;
+    if (window.DeviceMotionEvent) {
+        window.addEventListener('devicemotion', deviceMotionHandler, false);
+    } else {
+        alert('你的手机太差了，扔掉买个新的吧。');
+    }
+
+    function deviceMotionHandler(eventData) {
+        var acceleration = eventData.accelerationIncludingGravity;
+        var curTime = new Date().getTime();
+        if ((curTime - last_update) > 100) {
+            var diffTime = curTime - last_update;
+            last_update = curTime;
+            x = acceleration.x;
+            y = acceleration.y;
+            z = acceleration.z;
+            var speed = Math.abs(x + y + z - last_x - last_y - last_z) / diffTime * 10000;
+            //			var status = document.getElementById("status");
+            if (speed > SHAKE_THRESHOLD) {
+                doResult();
+            }
+            last_x = x;
+            last_y = y;
+            last_z = z;
+        }
+    }
+    window.can_shake1PHP=0;
+    function doResult() {
+
+        if(window.can_shake1PHP==9){
+            return false;
+        }
+    window.can_shake1PHP = 9;
+
+    if(GetQueryString('memberToken') == ''){
+        var t=setTimeout("alert('请先登陆');document.location = 'fruitday://Login';",1000)
+        return false;
+    }
+
+
+    setTimeout(function() {
+        $(".shake-tree span[class*='tree-']").addClass('tree-animation');
+            $("#musicP").click();
+            document.getElementById('musicBox').play();
+    }, 500);
+
+
+    $.post(window.serverUrl+'/api/index/rndIntegral',{'memberToken':getArgs()['memberToken']},function(res){
+        setTimeout(function() {
+        $(".shake-tree span.tree-animation").removeClass('tree-animation');
+
+    }, 1500);
+
+    window.can_shake1PHP = 0;
+   
+    if(res.apiCode!==0){
+        $("#get_score").text(res.apiInfo);
+        $("#pic_name").val("./result_emotion.png");   
+        $(".column-noGift").removeClass('hide');
+        setTimeout(function() {
+            $(".column-over").removeClass('hide');
+            $("#result").show();
+            $("#musicP").click();
+        }, 1500);
+        return false;
+    }else{
+        $("#get_score").text(res.apiInfo);
+        $("#pic_name").val("./result_integral.png");
+        $(".column-integral").removeClass('hide');
+        setTimeout(function() {
+            $(".column-over").removeClass('hide');
+            $("#result").removeClass('hide');
+            $("#musicP").click();
+        }, 1500);
+    }
+})
+
+}
+    $('.close-button, .button-col>.button:nth-of-type(2)').click(function(){
+        $("#result").fadeOut('300');
+        $(".result-component").removeClass("animation");
+        $(".gifts-col section").each(function(){
+            $(this).addClass('hide');
+        });
+        initShake(gets);
+    })
+
+    $(".continueShake").click(function(){
+//			window.location.reload();
+        $("#result").fadeOut(300);
+        $(".gifts-col section").each(function(){
+            $(this).addClass('hide');
+        })
+//			$(this).parent().parent().addClass("hide");
+        initShake(gets);
+//			$("#can_shake").val(1);
+//			$(this).parent().parent().addClass("hide");
+    });
+
+    $(".go_sign").click(function () {
+        window.location.href = sign_url+"&connect_id="+gets.connect_id+'&storeId='+gets.store_id+'&store_id_list='+gets.store_id_list;
+    });
+
+    $("#doResult").click(function(){
+        doResult();
+    });
+
+    $(".getThisGift").click(function(){
+        var tag = $(".gift-img-col>ul>li>label.selected").attr('value');
+        var choosePic = $(".gift-img-col>ul>li>label.selected").find("img").attr('src');
+
+        if(can_get==1){
+            can_get=2;
+            $.post(aa+"/shake/choose_gift",{connect_id:gets.connect_id,tag:tag},function(result){
+                if(result.code==200){
+                    $("#pic_name").val(choosePic);
+                    $("#gift_send_pro_pic").attr("src",choosePic);
+                    $(".column-triplets-fruit").addClass('hide');
+                    $(".close-button").show();
+                    $(".column-fruit").removeClass('hide');
+                }else{
+                    alert("我已登录")
+                    alert(result.msg);
+                    // alert('h7');
+                    can_get=1;
+                }
+            },'json');
+        }
+    });
+
+    $('#cop_url').click(function(){
+        $.ajax({
+            type: 'get',
+            url: aa+"/activepage/buyTj_v1?type=shake_yy_click",
+            jsonp: 'jsonp',
+            xhrFields: {
+                withCredentials: true
+            },
+            crossDomain: true,
+            success: function (data) {
+            }
+        });
+    })
+
+    // $('.call-next-btn').click(function(){
+    //     $(this).parentsUntil("section").parent("section").fadeOut("500").addClass('hide');
+    //     $(".column-fruit").fadeIn('800')
+    // })
+
+    // $('.testabcd').click(function () {
+    //     console.log($(".gift-img-col>ul>li>label.selected").attr('value'));
+    // })
+
+    $("#musicP").click(function(){
+        document.getElementById('musicBox').play();
+    });
+});

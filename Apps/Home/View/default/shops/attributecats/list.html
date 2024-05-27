@@ -1,0 +1,45 @@
+<extend name="./Apps/Home/View/default/shops/layout.html" />
+<block name="content">
+<style>
+
+</style>
+
+    <div class="wst-body"> 
+       <div class='wst-page-header'>卖家中心 > 商品类型</div>
+       <div class='wst-page-content'>
+        <div class='wst-tbar-group' style='text-align:right;margin-right: 50px;'>
+        	<span></span>
+           <a href='{:U("Home/AttributeCats/toEdit")}'><span class='btn'><i class="iconfont icon-add" style="font-size: 20px;margin-right: 10px;"></i></span>新增</a>&nbsp;
+        </div>
+        <table class='wst-list'>
+           <thead>
+             <tr>
+               <th width='20'>&nbsp;</th>
+               <th>商品类型</th>
+               <th width='150' style="text-align:center;">操作</th>
+             </tr>
+           </thead>
+           <tbody>
+            <volist name="List" id="vo" key='i'>
+             <tr>
+               <td>{$i}</td>
+               <td>{$vo['catName']}</td>
+               <td class="iconTd">
+               <a href="{:U('Home/Attributes/index',array('catId'=>$vo['catId']))}" class='btn' title='属性列表'><i class="iconfont icon-chakan"></i></a>
+               <a href="{:U('Home/AttributeCats/toEdit',array('id'=>$vo['catId']))}" class='btn' title='编辑'><i class="iconfont icon-bianji2"></i></a>
+               <a href="javascript:delAttrCat({$vo['catId']})" class='btn' title='删除'><i class="iconfont icon-qqq" style="font-size: 22px;"></i></a>
+               &nbsp;
+               </td>
+             </tr>
+             </volist>
+             <tfoot>
+             </tfoot>
+           </tbody>
+        </table>
+        <div class='wst-tbar-group' style='text-align:right'>
+        	<span></span>
+           <a href='{:U("Home/AttributeCats/toEdit",array("umark"=>"AttributeCats"))}'><span class='btn'><i class="iconfont icon-add" style="font-size: 20px;margin-right: 10px;"></i></span>新增</a>&nbsp;
+        </div>
+        </div>
+    </div>
+</block> 

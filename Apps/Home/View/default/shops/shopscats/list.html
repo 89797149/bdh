@@ -1,0 +1,156 @@
+<extend name="./Apps/Home/View/default/shops/layout.html" />
+<block name="content">
+
+<link rel="stylesheet" type="text/css" href="__PUBLIC__/plugins/webuploader/style.css" />
+<link rel="stylesheet" type="text/css" href="__PUBLIC__/plugins/webuploader/webuploader.css" />
+<script type="text/javascript" src="__ROOT__/Apps/Home/View/default/js/shopsbatchupload.js"></script>
+
+<style>
+	.OnefilePickers{ 
+		line-height:18px;
+	}
+	.webuploader-pick{
+		padding: 4px 0px;
+		line-height: 34px;
+		width: 107px;
+		    color: #409eff;
+    background: #ecf5ff;
+    border:1px solid #b3d8ff;
+    border-radius: 5px;
+	}
+	.webuploader-pick-hover{
+	background:#409eff;
+	color:#fff;
+}
+	.wst-form input{
+	    height: 22px;
+	}
+</style>
+<div class="wst-body">
+<div class='wst-page-header'>卖家中心 > 商品分类</div>   
+<div class='wst-page-content' style="padding-top:57px;">
+   <div class='wst-tbar-group' style='text-align:right;margin-bottom: 5px;'>
+   	 <span></span>
+   	 <a href='javascript:addGoodsCat(1);' style='margin-right:15px;'><span class='btn'><i class="iconfont icon-add" style="font-size: 20px;margin-right: 10px;"></i></span>新增</a>
+   </div>
+   <form autocomplete="off">
+   
+   <table id="cat_list_tab" class='wst-list wst-form' style="width:100%;">
+   <!--<thead>-->
+   <div style="display: flex;height: 40px;align-items: center;text-align: right;color:#707070;font-size:13px;border:1px solid #ddd;width:100%;padding: 4px 0px;border-left: 0;border-right: 0;">
+     <span style="width:30%;text-align: left;padding-left: 34px;">名称</span>
+	 <span style="width:30%;text-align:center;">分类图标</span>
+     <span style="width:10%;text-align: center;">排序号</span>
+     <p style="width:10%;text-align:center;" style="line-height: normal;">是否显示<br/><span style="font-weight:normal;color:#ff6b19;font-size: 12px;">(双击可修改)</span></p>
+     <span style="width:20%;text-align: center;">操作</span>
+   </div>
+   <!--</thead>-->
+   <volist name="List" id="vo" key='i'>
+   <input id='icons' class='icon' type='hidden' name="icon" value='{$vo.icon}'/>
+   <tbody>
+   <tr id='tr_{$i}' isLoad='1' style="width:100%;">
+     <td style="width:30%;">
+     <span class='wst-tree-open' onclick='javascript:loadGoodsCatChildTree(this,{$vo.catId},"tr_{$i}")'>&nbsp;</span>
+     <input type='text' style='width:200px;height:22px;' value='{$vo['catName']}' dataId="{$vo.catId}" onchange='javascript:editGoodsCatName(this)'/>
+	 
+     </td>
+	 <td style="width:30%;text-align: center;">
+	 			<div style="margin-top:5px;margin-bottom: 10px;">
+             	<img height="60" class='{$vo.catId}_view' alt="" src='__ROOT__/{$vo.icon}' />
+             </div>
+		 <div style="margin-left:0px;height:115px;position:relative;">
+		 
+		<script>
+		
+
+$(function () {
+//上传图片
+	uploadFile({
+    	  server:Think.U('Home/shops/uploadPic'),
+		  pick:'#{$vo.catId}_picker',
+    	  formData: {dir:'shops'},
+    	  callback:function(f){
+    		  layer.close(uploading);
+    		  var json = WST.toJson(f);
+			  console.log(json)
+    		  $('.{$vo.catId}_view').attr('src',WST.DOMAIN+"/"+json.file.savepath+json.file.savethumbname);
+			   //$('#icons').value = json.file.savepath+json.file.savename;
+			   //console.log($('#icons').value)
+			   //$("#imgFileName_{$vo.catId}").attr("imgFileName",json.file.savepath+json.file.savename);
+    		  $('.{$vo.catId}_view').show();
+			  var id={$vo.catId};
+			  	$.post(Think.U('Home/ShopsCats/editIcon'),{id:id,icon:json.file.savepath+json.file.savename},function(data,textStatus){
+					var jsons = WST.toJson(data);
+					if(jsons.status=='1'){
+						WST.msg('操作成功!',{icon: 1,time:500});
+					}else{
+						WST.msg('操作失败!', {icon: 5});
+					}
+				});
+			  
+	      },
+	      progress:function(rate){
+	    	  uploading = WST.msg('正在上传图片，请稍后...');
+	      }
+    });
+	
+	
+
+})
+</script> 
+
+			 <div id="{$vo.catId}_picker">
+			<div class="OnefilePickers icon" style="width: 107px;position: absolute;left: 50%;top: 50%;transform: translate(-50%,-37%);-webkit-transform: translate(-50%,-37%);">上传分类图标</div>
+			</div>
+			<div style="position: absolute;left: 50%;top:39%;transform: translate(-50%,-50%);-webkit-transform: translate(-50%,0%);color: #d49359;">(图片大小:80px x 80px)</div>
+		</div>
+	</td>
+     <td style="width:10%;text-align: center;">
+	 <input class='catsort' type='text' style='width:35px;margin-left:0px;' value="{$vo['catSort']}" dataId="{$vo.catId}" onchange='javascript:editGoodsCatSort(this)' onkeyup="javascript:WST.isChinese(this,1)" onkeypress="return WST.isNumberKey(event)"/>
+	 
+	 </td>
+	 
+     <if condition="$vo['isShow']==0 ">
+	  <td style="cursor:pointer;width:10%;text-align: center;" ondblclick="changeCatStatus(1,{$vo['catId']},0)"><span class='wst-state_no' style="margin-left:0px;text-align: center;display: inline-block;"></span></td>
+     <else/>
+      <td style="cursor:pointer;width:10%;text-align: center;" ondblclick="changeCatStatus(0,{$vo['catId']},0)"><span class='wst-state_yes' style="margin-left:0px;text-align: center;display: inline-block;"></span></td>
+     </if>
+     <td style="width:20%;text-align: center;">
+     <span onclick='javascript:addGoodsCat(this,{$vo["catId"]},{$i});' class='btn' title='新增' style="color: #50b94a;"><i class="iconfont icon-add" style="color: #01b500;font-size: 20px;"></i></span>
+     <span onclick="javascript:delGoodsCat({$vo['catId']},0)" class='btn' style="color: #50b94a;padding-left: 20px;" title='删除'><i class="iconfont icon-shanchu1" style="font-size: 20px;"></i></span>&nbsp;
+     </td>
+   </tr>
+   <if condition="$vo['childNum'] gt 0 ">
+      <volist name="vo['child']" id="vo2" key='i2'>
+	  <tr id='tr_{$i}_{$i2}' class="tr_{$i}" isLoad='1'>
+	     <td>
+	     <span class="wst-tree-second">&nbsp;</span>
+	     <input type='text' style='width:400px;height:22px;' value='{$vo2['catName']}' dataId="{$vo2.catId}" onchange='javascript:editGoodsCatName(this)'/>
+	     </td>
+		  <td style="cursor:pointer;"></td>
+
+	     <td style="text-align: center;"><input class='catsort' type='text' style='width:35px;margin-left:0px;' value="{$vo2['catSort']}" dataId="{$vo2.catId}" onchange='javascript:editGoodsCatSort(this)' onkeyup="javascript:WST.isChinese(this,1)" onkeypress="return WST.isNumberKey(event)"/></td>
+	     <if condition="$vo2['isShow']==0 ">
+		  <td style="cursor:pointer;text-align: center;" onclick="changeCatStatus(1,{$vo2['catId']},{$vo['catId']})"><span class='wst-state_no' style="margin-left:0px;text-align: center;display: inline-block;"></span></td>
+	     <else/>
+	      <td style="cursor:pointer;text-align: center;" onclick="changeCatStatus(0,{$vo2['catId']},{$vo['catId']})"><span class='wst-state_yes' style="margin-left:0px;text-align: center;display: inline-block;"></span></td>
+	     </if>
+	     <td style="cursor:pointer;text-align: center;">
+		 <a><i class="iconfont icon-shanchu1" style="color:transparent;"></i></a>
+	     <a href="javascript:delGoodsCat({$vo2['catId']},0)" class='btn' style="padding-left: 63px;" title='删除'><i class="iconfont icon-shanchu1" style="color: #50b94a;"></i></a>&nbsp;
+	     </td>
+	  </tr>
+      </volist>
+   </if>
+   </tbody>
+   </volist>
+</table>
+</form>
+<div class='wst-tbar-group' style="padding: 40px 0;text-align: center;">
+     <button class='wst-btn-query' style='margin-top:5px;background-color: #6aac38;margin-left: -53px;color: #fff;' type="button" onclick='javascript:batchSaveShopCats()'>保&nbsp;存</button>
+     <button class='wst-btn-query' style='margin-top:5px;margin-left:26px;background-color: #867d78;color: #fff;' type="button" onclick='javascript:location.reload()'>取&nbsp;消</button>
+     <a style='float:right;margin-right:5px;' href='javascript:addGoodsCat(1);'><span class='btn'><i class="iconfont icon-add" style="font-size: 20px;margin-right: 10px;"></i></span>新增</a>
+</div>
+</div>
+</div>
+</block>   

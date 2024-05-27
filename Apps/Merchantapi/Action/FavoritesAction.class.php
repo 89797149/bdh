@@ -1,0 +1,75 @@
+<?php
+ namespace Merchantapi\Action;
+/**
+ * ============================================================================
+ *NiaoCMS商城
+ * 官网地址:http://www.niaocms.com 
+ * 联系QQ:1692136178
+ * ============================================================================
+ * 收藏夹控制器
+ */
+class FavoritesAction extends BaseAction{
+	/**
+	 * 分页查询
+	 */
+	public function queryByPage(){
+		$shopInfo = $this->MemberVeri();
+		$m = D('Home/Favorites');
+    	$this->assign("umark","queryFavoritesByPage");
+    	$this->display("default/users/favorites");
+	}
+	/**
+	 * 获取商品关注
+	 */
+	public function queryGoodsByPage(){
+		$shopInfo = $this->MemberVeri();
+		$m = D('Home/Favorites');
+		$page = $m->queryGoodsByPage();
+		$rs = array();
+		$rs['status'] = 1;
+		$rs['data'] = $page;
+		$this->ajaxReturn($rs);
+	}
+    /**
+	 * 获取店铺关注
+	 */
+	public function queryShopsByPage(){
+		$shopInfo = $this->MemberVeri();
+		$m = D('Home/Favorites');
+		$page = $m->queryShopsByPage();
+		$rs = array();
+		$rs['status'] = 1;
+		$rs['data'] = $page;
+		$this->ajaxReturn($rs);
+	}
+	
+    /**
+     * 关注商品
+     */
+    public function favoriteGoods(){
+    	$shopInfo = $this->MemberVeri();
+    	$m = D('Home/Favorites');
+    	$rs = $m->favoriteGoods();
+    	$this->ajaxReturn($rs);
+    }
+    /**
+     * 关注商品
+     */
+    public function favoriteShops(){
+    	$shopInfo = $this->MemberVeri();
+    	$m = D('Home/Favorites');
+    	$rs = $m->favoriteShops();
+    	$this->ajaxReturn($rs);
+    }
+    
+    /**
+     * 取消关注
+     */
+    public function cancelFavorite(){
+    	$shopInfo = $this->MemberVeri();
+    	$m = D('Home/Favorites');
+    	$rs = $m->cancelFavorite();
+    	$this->ajaxReturn($rs);
+    }
+};
+?>

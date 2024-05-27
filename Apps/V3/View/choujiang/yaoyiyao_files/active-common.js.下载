@@ -1,0 +1,647 @@
+/**
+ * Created by zhangtao on 16/4/6.
+ */
+var cart_total = 0;
+
+function getArgs(){
+    var args = {};
+    var search = decodeURIComponent(location.search.substring(1));
+    var is_new = search.indexOf("=");
+    var reg = /(?:([^&]+)=([^&]+))/g;
+    while((match = reg.exec(search))!==null){
+        args[match[1]] = match[2];
+    }
+    return args;
+
+}
+var gets = getArgs();
+var numberItem = 0;
+function to_buy(price_id, pid, obj, event, type, img_str){
+
+    var pmt_id = (type==5)?$(obj).attr('data-pmdid'):0;
+    if(type == 5){
+        $.ajax({
+            type: 'POST',
+            url: "https://huodong.fruitday.com/cms/get_user_cart",
+            data: {connect_id: gets['connect_id'], region_id: gets['region_id']},
+            dataType: 'json',
+            async: false,
+            success: function(data){
+                cart_total = data.total?data.total:0;
+            }
+        });
+        if(parseFloat(cart_total)<parseFloat($(obj).attr('data-min'))){
+            alert('您的购物车未满'+$(obj).attr('data-min')+'元，不能购买此商品，赶紧去挑选喜欢的商品吧~');
+            return false;
+        }
+    }
+
+    if(gets['connect_id']){
+        $.post("https://huodong.fruitday.com/cms/add_b2cCart",{connect_id:gets['connect_id'],pid:pid,ppid:price_id,region_id:gets['region_id'],pmt_id:pmt_id},function(data){
+            if(data.code=='300'){
+                var msg = data.msg?data.msg:"加入购物车失败";
+                alert(msg);
+            }else if(data.code=='301'){
+                document.location = "fruitday://Login";
+                alert("我是登录")
+            }else{
+                $("#shopCart").attr("class", 'shop_cart');
+                var offset = $("#shopCart").offset();
+                if(type==1){
+                    var img = img_str?img_str:$(obj).parent().parent().parent().find(".limg").find('img').attr('src');
+                }else if(type==2){
+                    var img = img_str?img_str:$(obj).parent().parent().parent().parent().find(".limg").find('img').attr('src');
+                }else if(type==4){
+                    var img = img_str?img_str:$(obj).parent().find('img').attr('src');
+                }else{
+                    var img = img_str?img_str:$(obj).find('img').attr('src');
+                }
+                img = img?img:'https://huodongcdnws.fruitday.com/sale/160801-template-cms/images/product_empty_1.png';
+                var flyer = $('<img class="u-flyer" src="'+img+'">');
+
+                var scrollLeft = $(document).scrollLeft() || document.documentElement.scrollLeft || document.body.scrollLeft || 0,
+                    scrollTop = $(document).scrollTop() || document.documentElement.scrollTop || document.body.scrollTop || 0;
+                var left = offset.left+30;
+                var top = offset.top+30-scrollTop;
+                flyer.fly({
+                    start: {
+                        left: event.pageX-scrollLeft, //开始位置（必填）#fly元素会被设置成position: fixed
+                        top: event.pageY-scrollTop //开始位置（必填）
+                    },
+                    end: {
+                        left: left, //结束位置（必填）
+                        top: top, //结束位置（必填）
+                        width: 0, //结束时宽度
+                        height: 0 //结束时高度
+                    },
+                    onEnd: function(){ //结束回调
+                        numberItem = data.items_count;
+                        $("#flyItem").css("visibility", "hidden");
+                        $("#shopCart span").text(numberItem);
+                        $("#shopCart").addClass("shop_cart on");
+                        if(numberItem > 0 ){
+                            $("#shopCart span").addClass('num');
+                        }
+                        if(numberItem >= 999){
+                            numberItem = 998;
+                        }
+                        this.destory(); //移除dom
+                    }
+                });
+                set_hidden_img(pid);
+            }
+        },'json');
+    }else{
+        alert('请先登陆1');
+        document.location = "fruitday://Login";
+    }
+}
+
+function back_top(){
+    $("html,body").animate({scrollTop:0},500);
+}
+$(document).ready(function(){
+
+
+    // 返回顶部
+    $(".back_top").click(function(e){
+        e.preventDefault();//取消默认事件
+        $("html,body").animate({scrollTop:0},500);
+    });
+
+    if(gets.store_id_list==undefined){//老版本
+        if(gets['connect_id'] && ($(".shop_cart").length>0 || $(".shopCart").length>0)) {
+            $.post("https://huodong.fruitday.com/cms/get_user_cart", {connect_id: gets['connect_id'], region_id: gets['region_id']}, function (data) {
+                if(data.status=='success' && data.items_count>0){
+                    numberItem = data.items_count;
+                    $("#flyItem").css("visibility", "hidden");
+                    $("#shopCart span").text(numberItem);
+                    $("#shopCart").addClass("shop_cart on");
+                    $("#shopCart span").addClass('num');
+                }
+                cart_total = data.total?data.total:0;
+            }, 'json');
+        }
+
+        ///计时器
+        var timer = setInterval(function () {
+            if ($(".seckill-module").length<=0 && $(".yushou_time").length<=0) {
+                clearInterval(timer);
+                return false;
+            }
+            if( $(".seckill-module").length>0){
+                var _module = $('.seckill-module').find('.swiper-slide-active .list_hidden');
+                var duration =   parseInt(_module.attr('data-start')) - Date.parse(new Date())/1000;
+                var end      =   parseInt(_module.attr('data-end')) - Date.parse(new Date())/1000;
+                var price_id = _module.attr('data-priceid');
+                var count = _module.attr('data-count');
+                if(duration<=0 && end>0){
+                    if(end%5>0){
+                        return false;
+                    }
+                    $.post("https://huodong.fruitday.com/cms/get_kucun",{price_id:price_id},function(data){
+                        var surplus = data['stock']?data['stock']:0;
+                        var seckillW = (count-surplus)/count *100 +'%';
+                        $('.seckill-module').find('.swiper-slide-active').find(".seckill-percent").width(seckillW);
+                        $('.seckill-module').find('.swiper-slide-active').find(".num").text(surplus);
+                        if(surplus==0){
+                            $('.seckill-module').find('.swiper-slide-active').find(".seckill-percent-text").addClass('grey');
+                            $('.seckill-module').find('.swiper-slide-active').find(".buy_btn").text('已抢完').addClass('grey');
+                        }else{
+                            $('.seckill-module').find('.swiper-slide-active').find('.buy_btn').removeClass('grey').text('立即抢购');
+                        }
+                    },'json');
+                }else if(end<=0){//当前的已经结束 切换下一个
+                    $('.seckill-module').find('.swiper-slide-active').find('.buy_btn').addClass('grey').text('已抢完');
+                    if(end%3 == 0){
+                        swiper.slideNext();
+                    }
+                }
+            }
+
+            if($(".yushou_time").length>0){
+                $(".yushou_time").each(function(){
+                    var _this = $(this);
+                    var duration =   parseInt(_this.attr('data-time')) - Date.parse(new Date())/1000;
+                    if(duration<=0){
+                        var yushou_time = [0,0,0,0,0,0,0];
+                        _this.parent().parent().parent().find('.pierre_reserve a').attr('href', 'javascript:void(0)').css('background-color', '#AAAAAA');
+                        _this.removeClass('yushou_time');
+                    }else{
+                        var yushou_time = getTimeYushou(duration);
+                    }
+                    _this.find('.h_01').text(yushou_time[0]);
+                    _this.find('.h_02').text(yushou_time[1]);
+                    _this.find('.h_03').text(yushou_time[2]);
+                    _this.find('.m_01').text(yushou_time[3]);
+                    _this.find('.m_02').text(yushou_time[4]);
+                    _this.find('.s_01').text(yushou_time[5]);
+                    _this.find('.s_02').text(yushou_time[6]);
+                });
+            }
+
+        }, 1000);
+    }else{//b2o版本
+        var stop = (gets.store_id_list.indexOf('T'));
+        if(stop != '-1'){
+            gets.store_id_list = gets.store_id_list.substring(0,stop);
+        }
+        // console.log(gets.store_id_list);
+        if(gets['connect_id'] && ($(".shop_cart").length>0 || $(".shopCart").length>0)) {
+            $.post(url_head+"/activepage/get_user_cart_b2o", {connect_id: gets['connect_id'], store_id_list: gets['store_id_list']}, function (data) {
+                // console.log(data);
+                if(data.code=='200' && data.cart.count>0){
+                    numberItem = data.cart.count;
+                    $("#flyItem").css("visibility", "hidden");
+                    $("#shopCart span").text(numberItem);
+                    $("#shopCart").addClass("shop_cart on");
+                    $("#shopCart span").addClass('num');
+                    cart_total = data.cart.total.price?data.cart.total.price:0;
+                }
+            }, 'json');
+        }
+
+        var timer = setInterval(function () {
+            if ($(".seckill-module").length<=0 && $(".yushou_time").length<=0) {
+                clearInterval(timer);
+                return false;
+            }
+            if( $(".seckill-module").length>0){
+                var _module = $('.seckill-module').find('.swiper-slide-active .list_hidden');
+                var duration =   parseInt(_module.attr('data-start')) - Date.parse(new Date())/1000;
+                var end      =   parseInt(_module.attr('data-end')) - Date.parse(new Date())/1000;
+                var pid = _module.attr('data-pid');
+                var count = _module.attr('data-count');
+                if(duration<=0 && end>0){
+                    if(end%5>0){
+                        return false;
+                    }
+                    $.post(url_head+"/cms/get_kucun_b2o",{pid:pid,store_id:gets.store_id,store_id_list:gets.store_id_list},function(data){
+                        var surplus = data['stock']?data['stock']:0;
+                        var seckillW = (count-surplus)/count *100 +'%';
+                        $('.seckill-module').find('.swiper-slide-active').find(".seckill-percent").width(seckillW);
+                        $('.seckill-module').find('.swiper-slide-active').find(".num").text(surplus);
+                        if(surplus==0){
+                            $('.seckill-module').find('.swiper-slide-active').find(".seckill-percent-text").addClass('grey');
+                            $('.seckill-module').find('.swiper-slide-active').find(".buy_btn").text('已抢完').addClass('grey');
+                        }else{
+                            $('.seckill-module').find('.swiper-slide-active').find('.buy_btn').removeClass('grey').text('立即抢购');
+                        }
+                    },'json');
+                }else if(end<=0){//当前的已经结束 切换下一个
+                    $('.seckill-module').find('.swiper-slide-active').find('.buy_btn').addClass('grey').text('已抢完');
+                    if(end%3 == 0){
+                        swiper.slideNext();
+                    }
+                }
+            }
+
+            if($(".yushou_time").length>0){
+                $(".yushou_time").each(function(){
+                    var _this = $(this);
+                    var duration =   parseInt(_this.attr('data-time')) - Date.parse(new Date())/1000;
+                    if(duration<=0){
+                        var yushou_time = [0,0,0,0,0,0,0];
+                        _this.parent().parent().parent().find('.pierre_reserve a').attr('href', 'javascript:void(0)').css('background-color', '#AAAAAA');
+                        _this.removeClass('yushou_time');
+                    }else{
+                        var yushou_time = getTimeYushou(duration);
+                    }
+                    _this.find('.h_01').text(yushou_time[0]);
+                    _this.find('.h_02').text(yushou_time[1]);
+                    _this.find('.h_03').text(yushou_time[2]);
+                    _this.find('.m_01').text(yushou_time[3]);
+                    _this.find('.m_02').text(yushou_time[4]);
+                    _this.find('.s_01').text(yushou_time[5]);
+                    _this.find('.s_02').text(yushou_time[6]);
+                });
+            }
+
+        }, 1000);
+    }
+
+
+
+
+});
+//得到时间表示形式的函数
+function getTimeYushou(duration) {
+    var hour = duration  / (60*60);
+    var mins = duration % (24 * 60 * 60) % (60 * 60) / 60;
+    var sec = duration % (24 * 60 * 60) % (60 * 60) % 60;
+    hour =  parseInt(hour).toString();
+    mins =  parseInt(mins).toString();
+    sec  =  parseInt(sec).toString();
+    var str = '';
+    if(hour<10){
+        str += '00'+hour;
+    }else if(hour<100){
+        str += '0'+hour;
+    }else if(hour<999){
+        str += hour;
+    }else{
+        str += 999;
+    }
+    if (mins < 10) {
+        str += '0'+mins;
+    } else {
+        str += mins;
+    }
+    if (sec < 10) {
+        str += '0'+sec;
+    } else {
+        str += sec;
+    }
+    return str.split("");
+}
+
+function set_hidden_img(pid){
+    if(gets['version']>='4.0.0'){
+        location.href="fruitday://addToCartInH5?product_id=["+pid+"]";
+    }
+}
+
+function link_url_add_connect(){
+    var search_str = decodeURIComponent(location.search.substring(1));
+    $(".link_url").each(function(){
+        var url =  $.trim($(this).attr('href'));
+        if(url!='' && url!='javascript:;' && url!='javascript:;back_top()' && url!='#top' && url!='javascript:void(0)'){
+            var is_new = url.indexOf("?");
+            if(url.indexOf("productId=")==19){
+                var is_add_cart = $(this).attr('data-is-add-cart');
+                var default_pro_img=$(this).attr('data-default-pro-img');
+                if(is_add_cart == 1){
+                    var arrayParam = url.split("?");
+                    var params = {};
+                    var reg = /(?:([^&]+)=([^&]+))/g;
+                    while((match = reg.exec(arrayParam[1]))!==null){
+                        params[match[1]] = match[2];
+                    }
+                    if(default_pro_img){
+                        $(this).attr('onclick',"to_buy_b2o("+params['productId']+", this, event , 2,'" + default_pro_img + "')");
+                    }else{
+                        $(this).attr('onclick',"to_buy_b2o("+params['productId']+", this, event , 2)");
+                    }
+                    $(this).attr('href','javascript:;');
+                }else if(url.indexOf("priceId=")>0){//b2c加入购物车
+                    var arrayParam = url.split("?");
+                    var params = {};
+                    var reg = /(?:([^&]+)=([^&]+))/g;
+                    while((match = reg.exec(arrayParam[1]))!==null){
+                        params[match[1]] = match[2];
+                    }
+                    $(this).attr('onclick',"to_buy("+params['priceId']+","+params['productId']+", this, event , 3)");
+                    $(this).attr('href','javascript:;');
+                }else if(url.indexOf("b2oAddCart")>0){
+                    var arrayParam = url.split("?");
+                    var params = {};
+                    var reg = /(?:([^&]+)=([^&]+))/g;
+                    while((match = reg.exec(arrayParam[1]))!==null){
+                        params[match[1]] = match[2];
+                    }
+                    $(this).attr('onclick',"to_buy_b2o("+params['productId']+", this, event , 2)");
+                    $(this).attr('href','javascript:;');
+                }else{
+                    $(this).attr('href',url);
+                }
+            }else if(url.indexOf("product_id=")==22){
+                if(url.indexOf("price_id=")>0){//o2o加入购物车
+                    var arrayParam = url.split("?");
+                    var params = {};
+                    var reg = /(?:([^&]+)=([^&]+))/g;
+                    while((match = reg.exec(arrayParam[1]))!==null){
+                        params[match[1]] = match[2];
+                    }
+                    $(this).attr('onclick',"o2o_add_card("+params['product_id']+","+params['price_id']+", '"+params['product_no']+"')");
+                    $(this).attr('href','javascript:void(0)');
+                }
+            }else if(url.indexOf("ruitday")==1){
+                $(this).attr('href',url);
+            }else{
+                if(is_new==-1){
+                    url += '?'+search_str
+                }else{
+                    var is_has_value = url.indexOf("=");
+                    if(is_has_value == -1){
+                        url += search_str;
+                    }else{
+                        url += '&'+search_str;
+                    }
+                }
+                $(this).attr('href',url);
+            }
+        }
+    });
+}
+
+
+
+
+
+
+var u = navigator.userAgent;
+var isAndroid = u.indexOf('Android') > -1 || u.indexOf('Linux') > -1;
+var isIOS = !!u.match(/\(i[^;]+;( U;)? CPU.+Mac OS X/); //ios终端
+
+if(isAndroid || isIOS){
+    window.alert = function(name){
+        var iframe = document.createElement("IFRAME");
+        iframe.style.display="none";
+        if(!isAndroid){
+            iframe.setAttribute("src", 'data:text/plain,');
+        }
+        document.documentElement.appendChild(iframe);
+        window.frames[0].window.alert(name);
+        iframe.parentNode.removeChild(iframe);
+    };
+    window.confirm = function(name){
+        var iframe = document.createElement("IFRAME");
+        iframe.style.display="none";
+        if(!isAndroid){
+            iframe.setAttribute("src", 'data:text/plain,');
+        }
+        document.documentElement.appendChild(iframe);
+        var a = window.frames[0].window.confirm(name);
+        iframe.parentNode.removeChild(iframe);
+        return a;
+    }
+}
+
+function cms_v2_add_cart( pid, price_id, obj, event, type){
+    if(gets['connect_id']){
+        $.post("https://huodong.fruitday.com/cms/add_b2cCart",{connect_id:gets['connect_id'],pid:pid,ppid:price_id,region_id:gets['region_id']},function(data){
+            if(data.code=='300'){
+                var msg = data.msg?data.msg:"加入购物车失败";
+                alert(msg);
+            }else{
+                var offset = $("#shopCart").offset();
+                if(type==1){
+                    var img = $(obj).parent().parent().find('img').attr('src');
+                }
+                var flyer = $('<img class="u-flyer" src="'+img+'">');
+                var scrollLeft = $(document).scrollLeft() || document.documentElement.scrollLeft || document.body.scrollLeft || 0,
+                    scrollTop = $(document).scrollTop() || document.documentElement.scrollTop || document.body.scrollTop || 0;
+                var left = offset.left+30;
+                var top = offset.top+30-scrollTop;
+                flyer.fly({
+                    start: {
+                        left: event.pageX-scrollLeft, //开始位置（必填）#fly元素会被设置成position: fixed
+                        top: event.pageY-scrollTop //开始位置（必填）
+                    },
+                    end: {
+                        left: left, //结束位置（必填）
+                        top: top, //结束位置（必填）
+                        width: 0, //结束时宽度
+                        height: 0 //结束时高度
+                    },
+                    onEnd: function(){ //结束回调
+                        numberItem = data.items_count;
+                        $("#flyItem").css("visibility", "hidden");
+                        $("#shopCart span").text(numberItem);
+                        if(numberItem > 0 ){
+                            $("#shopCart").addClass("on")
+                            $("#shopCart span").addClass('num');
+                        }
+                        if(numberItem >= 999){
+                            numberItem = 999;
+                        }
+                        this.destory(); //移除dom
+                    }
+                });
+                set_hidden_img(pid);
+            }
+        },'json');
+    }else{
+        alert('请先登陆3');
+        document.location = "fruitday://Login";
+    }
+
+}
+
+
+function dapei_buy(product_id, price_id, obj, event){
+    var next_product_id = $(obj).parent().parent().find('li.on').attr('product_id');
+    var next_price_id   = $(obj).parent().parent().find('li.on').attr('price_id');
+    if(!next_product_id || !next_price_id){
+        return false;
+    }
+    product_id = product_id + ',' + next_product_id;
+    price_id   = price_id + ',' + next_price_id;
+    if(gets['connect_id']){
+        $.post("https://huodong.fruitday.com/cms/add_cart_more",{connect_id:gets['connect_id'],product_id:product_id,price_id:price_id,region_id:gets['region_id']},function(data){
+            if(data.code=='300'){
+                data.msg = data.msg?data.msg:"加入购物车失败";
+                alert(data.msg);
+            }else if(data.code=='301'){
+                document.location = "fruitday://Login";
+            }else{
+                var offset = $("#shopCart").offset();
+                var img = $(obj).parent().parent().find('img').eq(0).attr('src');
+                var flyer = $('<img class="u-flyer" src="'+img+'">');
+                var scrollLeft = $(document).scrollLeft() || document.documentElement.scrollLeft || document.body.scrollLeft || 0,
+                    scrollTop = $(document).scrollTop() || document.documentElement.scrollTop || document.body.scrollTop || 0;
+                var left = offset.left+30;
+                var top = offset.top+30-scrollTop;
+                flyer.fly({
+                    start: {
+                        left: event.pageX-scrollLeft, //开始位置（必填）#fly元素会被设置成position: fixed
+                        top: event.pageY-scrollTop //开始位置（必填）
+                    },
+                    end: {
+                        left: left, //结束位置（必填）
+                        top: top, //结束位置（必填）
+                        width: 0, //结束时宽度
+                        height: 0 //结束时高度
+                    },
+                    onEnd: function(){ //结束回调
+                        numberItem = data.items_count;
+                        $("#flyItem").css("visibility", "hidden");
+                        $("#shopCart span").text(numberItem);
+                        if(numberItem > 0 ){
+                            $("#shopCart").addClass("on")
+                            $("#shopCart span").addClass('num');
+                        }
+                        if(numberItem >= 999){
+                            numberItem = 999;
+                        }
+                        this.destory(); //移除dom
+                    }
+                });
+                set_hidden_img(product_id);
+            }
+        },'json');
+    }else{
+        alert('请先登陆6');
+        document.location = "fruitday://Login";
+    }
+}
+
+
+//得到时间表示形式的函数
+function getTimeTxt(duration) {
+    var hour = duration % (24*60*60) / (60*60);
+    var mins = duration % (24 * 60 * 60) % (60 * 60) / 60;
+    var sec = duration % (24 * 60 * 60) % (60 * 60) % 60;
+
+    hour =  parseInt(hour).toString();
+    mins =  parseInt(mins).toString();
+    sec  =  parseInt(sec).toString();
+    var html = '即将开秒<i>';
+    if(hour<10){
+        html += "0"+hour+":";
+    }else{
+        html += hour+":";
+    }
+    if (mins < 10) {
+        html += "0"+mins+":";
+    } else {
+        html += mins+":";
+    }
+    if (sec < 10) {
+        html += "0"+sec;
+    } else {
+        html += sec;
+    }
+    html += '</i>';
+    return html;
+}
+
+function miaosha_buy(price_id, pid, obj, event, type, img_str, startTime){
+    var duration =   startTime - Date.parse(new Date())/1000;
+    if(duration>0){
+        alert("尚未开始，请稍等");
+        return false;
+    }
+    to_buy(price_id, pid, obj, event, type, img_str);
+}
+
+
+
+
+var url_head = 'https://huodong.fruitday.com'; //'http://staging.active.fruitday.com'; //http://huodong1.fruitday.com'; //https://huodong.fruitday.com
+
+function miaosha_buy_b2o(pid, obj, event, type, img_str, startTime){
+    var duration =   startTime - Date.parse(new Date())/1000;
+    if(duration>0){
+        alert("尚未开始，请稍等");
+        return false;
+    }
+    to_buy_b2o(pid, obj, event, type, img_str);
+}
+
+function dapei_buy_b2o(product_id, obj, event){
+    var next_product_id = $(obj).parent().parent().find('li.on').attr('product_id');
+    if(!next_product_id){
+        return false;
+    }
+    product_id = product_id + ',' + next_product_id;
+    if(gets['connect_id']){
+        $.post(url_head+"/activepage/add_cart_more_b2o",{connect_id:gets['connect_id'],pid:product_id,store_id:gets['store_id'],store_id_list:gets['store_id_list']},function(data){
+            if(data.code=='300'){
+                data.msg = data.msg?data.msg:"加入购物车失败";
+                alert(data.msg);
+            }else if(data.code=='301'){
+                document.location = "fruitday://Login";
+            }else{
+                var offset = $("#shopCart").offset();
+                var img = $(obj).parent().parent().find('img').eq(0).attr('src');
+                var flyer = $('<img class="u-flyer" src="'+img+'">');
+                var scrollLeft = $(document).scrollLeft() || document.documentElement.scrollLeft || document.body.scrollLeft || 0,
+                    scrollTop = $(document).scrollTop() || document.documentElement.scrollTop || document.body.scrollTop || 0;
+                var left = offset.left+30;
+                var top = offset.top+30-scrollTop;
+                flyer.fly({
+                    start: {
+                        left: event.pageX-scrollLeft, //开始位置（必填）#fly元素会被设置成position: fixed
+                        top: event.pageY-scrollTop //开始位置（必填）
+                    },
+                    end: {
+                        left: left, //结束位置（必填）
+                        top: top, //结束位置（必填）
+                        width: 0, //结束时宽度
+                        height: 0 //结束时高度
+                    },
+                    onEnd: function(){ //结束回调
+                        numberItem = data.cart.count;
+                        $("#flyItem").css("visibility", "hidden");
+                        $("#shopCart span").text(numberItem);
+                        if(numberItem > 0 ){
+                            $("#shopCart").addClass("on")
+                            $("#shopCart span").addClass('num');
+                        }
+                        if(numberItem >= 999){
+                            numberItem = 999;
+                        }
+                        this.destory(); //移除dom
+                    }
+                });
+                set_hidden_img(product_id);
+            }
+        },'json');
+    }else{
+        alert('请先登陆8');
+        document.location = "fruitday://Login";
+    }
+}
+
+
+
+function birthday_gift_b2o(cms_id, obj){
+    var tag  =  $(obj).attr('cmstag');
+    var product_name = $(obj).attr('productn');
+    var sign = $(obj).attr('cmssign');
+    var is_click = $(obj).attr('is_click');
+    if(is_click==1){
+        return false;
+    }
+    if(gets['connect_id']){
+        $(obj).attr('is_click','1');
+        $.post(url_head+"/cms/gift_by_brithday",{cms_id:cms_id, connect_id:gets['connect_id'], tag:tag, product_name:product_name, sign:sign},function(data){
+            alert(data.msg);
+            $(obj).attr('is_click','0');
+        },'json');
+    }else{
+        alert('请先登陆9');
+        document.location = "fruitday://Login";
+    }
+}

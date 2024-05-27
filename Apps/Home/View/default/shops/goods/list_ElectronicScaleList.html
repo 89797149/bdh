@@ -1,0 +1,80 @@
+<extend name="./Apps/Home/View/default/shops/layout.html" />
+<block name="content">
+<style type="text/css">
+#preview{border:1px solid #cccccc; background:#CCC;color:#fff; padding:5px; display:none; position:absolute;}
+
+select {
+    height: 30px;
+    box-shadow: 2px 2px 2px transparent inset;
+    border-radius: 4px;
+    border: 1px solid #dcdfe6;
+}
+
+</style>
+<script src="__PUBLIC__/plugins/layer/layer.min.js"></script>
+	<script src="__ROOT__/Apps/Home/View/default/js/vue.js" type="text/javascript" charset="utf-8"></script>
+    <script src="__ROOT__/Apps/Home/View/default/js/vue-resource.js" type="text/javascript" charset="utf-8"></script>
+    <script src="__ROOT__/Apps/Home/View/default/js/require.js" type="text/javascript" charset="utf-8"></script>
+    <script src="__ROOT__/Apps/Home/View/default/js/SQLite.js" type="text/javascript" charset="utf-8"></script>
+				
+				
+			<script>
+	if(typeof(isClient)!=='undefined'){		
+
+		
+		function addElectricBtn(){
+			layer.open({
+				type: 2,
+				title:"新增列表",
+				shade: [0.6, '#000'],
+				border: [0],
+				//content:'Home/Orders/addElectricList.html',
+				content:'',
+
+				area: ['1020px', ($(window).height() - 50) +'px']
+			});
+		}
+	}		    
+
+			</script>
+    <div class="wst-body"> 
+       <div class='wst-page-header'>卖家中心 > 电子秤配置</div>
+       <div class='wst-page-content' style='padding-top: 96px;'>
+        <div class='wst-tbar-query listHeaderInput'>
+      <button class='wst-btn-query' onclick='addElectricBtn()'>新增</button>
+        </div>
+        <table class='wst-list'>
+           <thead>
+             <tr>
+               <th width="100">ip</th> 
+               <th width="80">端口</th>
+               <th>备注</th>
+               <th width='120' style="text-align:center;">操作</th>
+             </tr>
+           </thead>
+           <tbody>
+             <tr>
+               <td>
+               </td>
+               <td class="iconTd">
+               <a href="" class='btn' title='编辑'><i class="iconfont icon-bianji2"></i></a>
+               <a href="" class='btn' title='删除'><i class="iconfont icon-qqq" style="font-size: 22px;"></i></a>
+               &nbsp;
+               </td>
+             </tr>
+             <tfoot>
+             <tr>
+                <td colspan='12'>
+                <div class="wst-page" style="text-align: center;padding-bottom:10px;margin-top: 30px;">  
+						<div id="wst-page-items"></div>
+				</div>
+				
+                </td>
+             </tr>
+             </tfoot>
+           </tbody>
+        </table>
+
+        </div>
+    </div>
+</block> 

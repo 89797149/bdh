@@ -1,0 +1,453 @@
+<extend name="./Apps/Home/View/default/shops/layout.html" />
+<block name="content">
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_490692_yxdat2sn3kp.css" />
+
+<style type="text/css">
+#preview{border:1px solid #cccccc; background:#CCC;color:#fff; padding:5px; display:none; position:absolute;}
+
+select {
+    height: 30px;
+    box-shadow: 2px 2px 2px transparent inset;
+    border-radius: 4px;
+    border: 1px solid #dcdfe6;
+}
+.layerDiv,.layer2Div{
+    width: 100%;
+    height: 100%;
+    background: rgba(0,0,0,.6);
+    position: fixed;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    z-index: 1111111;
+	display:none;
+}
+.layerDiv .inner,.layer2Div .inner{
+	width: 50%;
+    background: #fff;
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%,-50%);
+	padding-top: 30px;
+}
+.layerDiv tfoot tr,.layer2Div tfoot tr{
+    position: relative;
+    height: 114px;
+}
+.layerDiv tfoot tr td,.layer2Div tfoot tr td{
+    padding: 38px 0;
+    text-align: center;
+    position: absolute;
+    left: 50%;
+	bottom: 0;
+    transform: translateX(-50%);
+    -webkit-transform: translateX(-50%);
+}
+.closeSet,.close2Set{
+    color: #333;
+    position: absolute;
+    right: 5px;
+    top: 12px;
+    font-size: 16px;
+    width: 40px;
+    height: 32px;
+    line-height: 32px;
+    text-align: center;
+    cursor: pointer;
+}
+
+.editspan span{
+    background-color: #85ce61;
+    text-align: center;
+    color: #fff;
+    border-radius: 5px;
+    padding: 10px 20px;
+    font-size: 14px;
+	cursor: pointer;
+}
+.editspan span:nth-child(2){
+    background-color: #e6a23c;
+    margin-left: 11px;
+}
+.wst-tbar-query {
+    width: 100%;
+    text-align: left;
+    margin-bottom: 27px;
+    margin-left: 10px;
+}
+</style>
+<script src="__ROOT__/Public/js/jquery.min.js"></script>
+<script src="http://cdn.bootcss.com/jquery/1.12.3/jquery.min.js"></script>
+	<script src="__PUBLIC__/plugins/layer/layer.min.js"></script>
+	<script src="__ROOT__/Apps/Home/View/default/js/vue.js" type="text/javascript" charset="utf-8"></script>
+    <script src="__ROOT__/Apps/Home/View/default/js/vue-resource.js" type="text/javascript" charset="utf-8"></script>
+    <script src="__ROOT__/Apps/Home/View/default/js/require.js" type="text/javascript" charset="utf-8"></script>
+    <script src="__ROOT__/Apps/Home/View/default/js/SQLite.js" type="text/javascript" charset="utf-8"></script>
+				
+				
+			<script>
+			
+	$(function(){
+	
+	//layer.confirm('确定发货吗？',{icon: 3, title:'系统提示'}, function(tips){})
+	
+		M('shopElectric').select().then(t=>{
+			console.log("抽象层获取数据列表11:")
+			console.log(t)
+			var dialogs = "";
+			
+		    for(var j=0;j<t.length;j++){
+			dialogs+="<tr class='titles' id='"+j+"'>";
+				dialogs+="<td class='ip' style='text-align:left;'>";
+					dialogs+="<span class='text-black attrIp'>"+t[j].ip+"</span>";
+				dialogs+="</td>";
+				dialogs+="<td class='port' style='text-align:center;'>";
+					dialogs+="<span class='text-black attrPort'>"+t[j].port+"</span>";
+				dialogs+="</td>";
+				dialogs+="<td class='remark' style='text-align:center;'>";
+					dialogs+="<span class='text-black attrRemark'>"+t[j].remark+"</span>";
+				dialogs+="</td>";
+			dialogs+="<td class='editspan' style='text-align:center;'>";
+					dialogs+="<span class='text-black edits' name='"+j+"' ids='"+t[j].id+"' ip='"+t[j].ip+"' port='"+t[j].port+"' remark='"+t[j].remark+"'>修改</span>";
+					dialogs+="<span class='text-black dels' name='"+j+"' ids='"+t[j].id+"' ip='"+t[j].ip+"' port='"+t[j].port+"' remark='"+t[j].remark+"'>删除</span>";
+			dialogs+="</td>";
+
+			dialogs+="</tr>";
+				
+
+			}
+			$(".bodys").append(dialogs);
+			
+			//点击修改1
+			$(".edits[name]").on("click",function(){
+				//alert($(this).attr("name"))
+				$(".layer2Div").show();
+				
+				$(".electric2IpName").val($(this).attr("ip"));
+				$(".electric2PortName").val($(this).attr("port"));
+				$(".electric2RemarkName").val($(this).attr("remark"));
+				
+				$(".save2editElectricBtn").attr('ip',$(this).attr("ip"));
+				$(".save2editElectricBtn").attr('port',$(this).attr("port"));
+				$(".save2editElectricBtn").attr('remark',$(this).attr("remark"));
+				
+				$(".save2editElectricBtn").attr('id',$(this).attr("name"));
+				$(".save2editElectricBtn").attr('ids',$(this).attr("ids"));
+
+				
+			})
+			
+			
+			//点击删除1
+			$(".dels[name]").on("click",function(){
+
+				var ids=Number($(this).attr("ids"));
+				
+								console.log($(this))
+				console.log(ids)
+				
+				M('shopElectric').where('id='+ids+'').delete().then(t=>{
+					if(t){
+						console.log('删除数据成功');
+						$(this).parent().parent().remove();
+					}else{
+						console.log('删除数据失败');
+					}
+				})
+			})
+			
+		});
+		
+//循环111111111111111111111111
+//var newarr=eval("("+localStorage.arrs+")");
+			
+
+	})		
+	if(typeof(isClient)!=='undefined'){		
+
+		
+		function addElectricBtn(){
+			console.log("edit000")
+			$(".layerDiv").show();
+			//layer.open({
+				//type: 2,
+				//title:"新增列表",
+				//shade: [0.6, '#000'],
+				//border: [0],
+				//content:'Home/Orders/addElectricList.html',
+				//area: ['1020px', ($(window).height() - 50) +'px']
+			//});
+		}
+		
+		function closeSet(){
+			$(".layerDiv").hide();
+		}
+		
+		function close2Set(){
+			$(".layer2Div").hide();
+		}
+		
+		//新增列表
+
+		function saveElectricSet(){
+			console.log("新增列表111")
+				$(".layerDiv").hide();
+				M('shopElectric').insert({'ip':'"'+$(".electricIpName").val()+'"','port':'"'+$(".electricPortName").val()+'"','remark':'"'+$(".electricRemarkName").val()+'"'},t=>{
+
+					if(t){
+						console.log("新增列表aaa")
+					//console.log(t)
+						//console.log('数据添加成功'+t)
+						$(".layerDiv").hide();
+						
+						//成功后新增到列表
+
+						//arrs.push({
+						//	'ip':$(".electricIpName").val(),
+						//	'port':$(".electricPortName").val(),
+						//	'remark':$(".electricRemarkName").val()
+						//})
+						
+						//console.log(arrs)
+					}else{
+					//console.log('抽象层数据添加失败'+t)
+					//$(".layerDiv").hide();
+					}
+				})
+				
+			//单条数据查询	
+			//M('shopElectric').where('id="23"').field('ip,remark').find().then(
+			//t=>{
+			//		console.log("抽象层获取单个数据:")
+
+			//		console.log(t)
+			//	}
+			//);
+
+			//end	
+				
+				M('shopElectric').select().then(t=>{
+			console.log("抽象层获取数据列表11:")
+			
+			var evalArr=t[t.length-1];
+			console.log(evalArr)
+			console.log(typeof(evalArr))
+			console.log(evalArr.id)
+			
+			var newlength=t.length-1;
+			
+			var dialogs = "";
+			
+		    //for(var j=0;j<t.length;j++){
+			dialogs+="<tr class='titles' id='"+newlength+"'>";
+				dialogs+="<td class='ip' style='text-align:left;'>";
+					dialogs+="<span class='text-black attrIp'>"+evalArr.ip+"</span>";
+				dialogs+="</td>";
+				dialogs+="<td class='port' style='text-align:center;'>";
+					dialogs+="<span class='text-black attrPort'>"+evalArr.port+"</span>";
+				dialogs+="</td>";
+				dialogs+="<td class='remark' style='text-align:center;'>";
+					dialogs+="<span class='text-black attrRemark'>"+evalArr.remark+"</span>";
+				dialogs+="</td>";
+			dialogs+="<td class='editspan' style='text-align:center;'>";
+					dialogs+="<span class='text-black edits' name='"+newlength+"' ip='"+evalArr.ip+"' ids='"+evalArr.id+"' port='"+evalArr.port+"' remark='"+evalArr.remark+"'>修改</span>";
+					dialogs+="<span class='text-black dels' name='"+newlength+"' ip='"+evalArr.ip+"' ids='"+evalArr.id+"' port='"+evalArr.port+"' remark='"+evalArr.remark+"'>删除</span>";
+			dialogs+="</td>";
+
+			dialogs+="</tr>";
+				
+
+			//}
+			$(".bodys").append(dialogs);
+			
+			//点击修改
+			$(".edits[name]").on("click",function(){
+				//alert($(this).attr("name"))
+				$(".layer2Div").show();
+				
+				$(".electric2IpName").val($(this).attr("ip"));
+				$(".electric2PortName").val($(this).attr("port"));
+				$(".electric2RemarkName").val($(this).attr("remark"));
+				
+				$(".save2editElectricBtn").attr('ip',$(this).attr("ip"));
+				$(".save2editElectricBtn").attr('port',$(this).attr("port"));
+				$(".save2editElectricBtn").attr('remark',$(this).attr("remark"));
+				
+				$(".save2editElectricBtn").attr('id',$(this).attr("name"));
+				$(".save2editElectricBtn").attr('ids',$(this).attr("ids"));
+				
+			})
+			
+			//点击删除
+			
+			$(".dels[name]").on("click",function(){
+
+				var ids=$(this).attr("ids");
+				console.log($(this))
+				console.log(ids)
+				M('shopElectric').where('id='+ids+'').delete().then(t=>{
+					if(t){
+						console.log('删除数据成功');
+						$(this).parent().parent().remove();
+					}else{
+						console.log('删除数据失败');
+					}
+				})
+			})
+		});
+
+		}
+		
+		//$(".save2editElectricBtn[id]").on("click",function(){
+		//})
+			
+			
+		function save2ElectricSet(){
+				$(".layer2Div").hide();
+		
+				console.log($(event.target).attr("ids"));
+				
+				var updateId=$(event.target).attr("id");
+				
+				var myeditid=$(event.target).attr("ids");
+				//var eitId='"'+myeditid+'"';
+				//var eitId='"'+myeditid+'"';
+				//var myeditid=20;
+				var editPort=Number($(event.target).parent().parent().parent().parent().find(".electric2PortName").val());
+				var editIp=$(event.target).parent().parent().parent().parent().find(".electric2IpName").val();
+				var editRemark=$(event.target).parent().parent().parent().parent().find(".electric2RemarkName").val();
+
+				//修改
+				M('shopElectric').where('id='+myeditid+'').update({
+					'ip':'"'+editIp+'"',
+					'port':'"'+editPort+'"',
+					'remark':'"'+editRemark+'"'
+					}).then(t=>{
+					if(t){
+						console.log('更新成功');
+						console.log(updateId);
+						
+						for(var i=0;i<$(".titles").length;i++){
+						
+							
+							if(updateId==$(".titles").eq(i).attr("id")){
+								
+								console.log($(".titles").eq(i).find(".attrIp"))
+							
+								$(".titles").eq(i).find(".attrIp").html(editIp);
+								$(".titles").eq(i).find(".attrPort").html(editPort);
+								$(".titles").eq(i).find(".attrRemark").html(editRemark);
+								
+								$(".titles").eq(i).find(".edits").attr("ip",editIp);
+								$(".titles").eq(i).find(".edits").attr("port",editPort);
+								$(".titles").eq(i).find(".edits").attr("remark",editRemark);
+								
+								$(".titles").eq(i).find(".dels").attr("ip",editIp);
+								$(".titles").eq(i).find(".dels").attr("port",editPort);
+								$(".titles").eq(i).find(".dels").attr("remark",editRemark);
+							
+							}
+						}
+
+					}else{
+						console.log('抽象层数据更新失败')
+					}
+
+				});		
+		}
+
+	}		    
+
+			</script>
+    <div class="wst-body"> 
+       <div class='wst-page-header'>卖家中心 > 电子秤配置</div>
+       <div class='wst-page-content' style='padding-top: 96px;'>
+        <div class='wst-tbar-query listHeaderInput'>
+      <button class='wst-btn-query' style='margin-bottom: 22px;' onclick='addElectricBtn()'>新增</button>
+        </div>
+        <table class='wst-list'>
+           <thead>
+             <tr>
+               <th width="140" style="text-align:center;">ip</th> 
+               <th width="100" style="text-align:center;">端口</th>
+               <th style="text-align:center;">备注</th>
+               <th width='210' style="text-align:center;">操作</th>
+             </tr>
+           </thead>
+           <tbody class='bodys'>
+
+           </tbody>
+        </table>
+
+        </div>
+		<div class="layerDiv">
+			<div class="inner">
+				<span class="closeSet" onclick="closeSet()">
+					<i class="iconfont icon-x"></i>
+				</span>
+				<table class='wst-list listHeaderInput' style="font-size:13px;">
+					<thead>
+						<tr>
+							<th width='100' style="text-align:center;">ip</th>
+							<th width='100' style="text-align:center;">端口</th>
+							<th width='*' style="text-align:center;">备注</th>
+						</tr>
+					</thead>
+					<tbody id="otbody5">
+					<tr>
+						<td style="text-align:left;"><input type='text' class='electricIpName'/></td>
+						<td style="text-align:center;"><input type='text' class='electricPortName'/></td>
+						<td style="text-align:center;"><input type='text' style='width:250px;' class='electricRemarkName'/></td>
+
+					</tr>
+					</tbody>
+					<tfoot>
+						<tr>
+						 <td colspan='2' style='padding: 38px 0;text-align: center;'>
+							 <button type="submit" class='wst-btn-query' onclick="saveElectricSet()" style='margin-top:5px;background-color: #85ce61;margin-left: -53px;color:#fff;'>保&nbsp;存</button>&nbsp;&nbsp;
+							 <button type="button" class='wst-btn-query' onclick='closeSet()' style='margin-top:5px;margin-left:26px;background-color: #909399;color:#fff;'>取&nbsp;消</button>
+							
+						 </td>
+						</tr>
+					 </tfoot>
+				</table>
+			</div>
+		</div>
+		<div class="layer2Div">
+			<div class="inner">
+				<span class="closeSet" onclick="close2Set()">
+					<i class="iconfont icon-x"></i>
+				</span>
+				<table class='wst-list listHeaderInput' style="font-size:13px;">
+					<thead>
+						<tr>
+							<th width='100' style="text-align:center;">ip</th>
+							<th width='100' style="text-align:center;">端口</th>
+							<th width='*' style="text-align:center;">备注</th>
+						</tr>
+					</thead>
+					<tbody id="otbody5">
+					<tr>
+						<td style="text-align:center;"><input type='text' class='electric2IpName'/></td>
+						<td style="text-align:center;"><input type='text' class='electric2PortName'/></td>
+						<td style="text-align:center;"><input type='text' style='width:250px;' class='electric2RemarkName'/></td>
+
+					</tr>
+					</tbody>
+					<tfoot>
+						<tr>
+						 <td colspan='2' style='padding: 38px 0;text-align: center;'>
+							 <button type="submit" class='wst-btn-query save2editElectricBtn' onclick="save2ElectricSet()" style='margin-top:5px;background-color: #85ce61;margin-left: -53px;color:#fff;'>保&nbsp;存</button>&nbsp;&nbsp;
+							 <button type="button" class='wst-btn-query' onclick='close2Set()' style='margin-top:5px;margin-left:26px;background-color: #909399;color:#fff;'>取&nbsp;消</button>
+							
+						 </td>
+						</tr>
+					 </tfoot>
+				</table>
+			</div>
+		</div>
+    </div>
+</block> 

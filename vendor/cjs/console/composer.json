@@ -1,0 +1,27 @@
+{
+  "name": "cjs/console",
+  "description": "The cjs console package.",
+  "license": "MIT",
+  "homepage": "http://www.chengjinsheng.com",
+  "authors": [
+    {
+      "name": "jelly",
+      "email": "42282367@qq.com"
+    }
+  ],
+  "require": {
+    "php": ">=5.4.0",
+    "cjs/cron": "^1.0.0"
+  },
+  "autoload": {
+    "classmap": [
+
+    ],
+    "files": [
+      "src/Helper.php"
+    ],
+    "psr-4": {
+      "CjsConsole\\": "src/"
+    }
+  }
+}
